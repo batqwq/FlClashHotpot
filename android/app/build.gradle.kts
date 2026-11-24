@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId = "com.follow.clash"
-        minSdk = flutter.minSdkVersion
+        minSdk = maxOf(flutter.minSdkVersion, libs.versions.minSdk.get().toInt())
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -54,6 +54,9 @@ android {
     packaging {
         jniLibs {
             useLegacyPackaging = true
+        }
+        resources {
+            excludes += listOf("META-INF/versions/**")
         }
     }
 
@@ -101,6 +104,7 @@ dependencies {
     implementation(project(":service"))
     implementation(project(":common"))
     implementation(project(":core"))
+    implementation(project(":vpnhotspot"))
     implementation(libs.core.splashscreen)
     implementation(libs.gson)
     implementation(libs.smali.dexlib2) {

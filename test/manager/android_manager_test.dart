@@ -1,13 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/common/service_probe.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/manager/android_manager.dart';
 import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/plugins/hotspot.dart';
 import 'package:fl_clash/plugins/service.dart';
 import 'package:fl_clash/providers/action.dart';
 import 'package:fl_clash/providers/config.dart';
 import 'package:fl_clash/providers/database.dart';
+import 'package:fl_clash/providers/outbound_ip.dart';
+import 'package:fl_clash/providers/routed_probe.dart';
 import 'package:fl_clash/providers/state.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/widgets.dart';
@@ -27,6 +32,105 @@ class _RecordingSetupAction extends SetupAction {
     requests.add(running);
     return true;
   }
+}
+
+class _MutableOutboundProbe extends OutboundIpProbe {
+  int watchCount = 0;
+
+  @override
+  RoutedProbeState<String, IpInfo> build() => const RoutedProbeState();
+
+  @override
+  void watch(String target) {
+    watchCount++;
+  }
+
+  @override
+  void unwatch(String target) {
+    watchCount--;
+  }
+
+  void setCountry(String? code) {
+    state = code == null
+        ? const RoutedProbeState()
+        : RoutedProbeState({
+            routedOutbound: ProbeEntry(
+              phase: ProbePhase.fresh,
+              value: IpInfo(ip: '198.51.100.1', countryCode: code),
+            ),
+          });
+  }
+}
+
+class _FakeCountryHotspotHost implements HotspotHost {
+  _FakeCountryHotspotHost({this.supported = false});
+
+  final bool supported;
+  final appliedCodes = <String?>[];
+  final autoMatchController = StreamController<bool>.broadcast();
+
+  void close() {
+    unawaited(autoMatchController.close());
+  }
+
+  @override
+  bool get isSupported => supported;
+
+  @override
+  Future<HotspotSnapshot> getState() async =>
+      HotspotSnapshot(supported: supported);
+
+  @override
+  Stream<HotspotSnapshot> watchState() => const Stream.empty();
+
+  @override
+  Stream<bool> watchAutoMatchCountryCode() => autoMatchController.stream;
+
+  @override
+  Future<void> setInterfaceManaged(String iface, bool enabled) async {}
+
+  @override
+  Future<void> setInterfaceMonitored(String iface, bool enabled) async {}
+
+  @override
+  Future<void> setRepeaterEnabled(bool enabled) async {}
+
+  @override
+  Future<void> setLocalOnlyHotspotEnabled(bool enabled) async {}
+
+  @override
+  Future<bool> setSystemTetheringEnabled(String type, bool enabled) async =>
+      false;
+
+  @override
+  Future<void> setMasqueradeMode(HotspotMasqueradeMode mode) async {}
+
+  @override
+  Future<void> setIpv6Mode(HotspotIpv6Mode mode) async {}
+
+  @override
+  Future<void> setTetherOffloadEnabled(bool enabled) async {}
+
+  @override
+  Future<void> setAutoStartEnabled(bool enabled) async {}
+
+  @override
+  Future<void> setAutoMatchCountryCode(bool enabled) async {}
+
+  @override
+  Future<String?> setCountryCode(String? countryCode) async {
+    appliedCodes.add(countryCode);
+    return countryCode;
+  }
+
+  @override
+  Future<void> cleanRouting() async {}
+
+  @override
+  Future<void> openNativeUi() async {}
+
+  @override
+  Future<void> openSystemTetheringSettings() async {}
 }
 
 void main() {
@@ -148,6 +252,68 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(store.getString('sharedState'), isNull);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('syncs hotspot country code when exit IP country changes', (
+    tester,
+  ) async {
+    final fakeHost = _FakeCountryHotspotHost(supported: true);
+    final probe = _MutableOutboundProbe();
+    addTearDown(() {
+      fakeHost.close();
+      hotspotManager.resetForTesting(_FakeCountryHotspotHost(supported: false));
+    });
+    hotspotManager.resetForTesting(fakeHost);
+
+    final localContainer = ProviderContainer(
+      overrides: [
+        profilesProvider.overrideWith(TestProfiles.new),
+        setupActionProvider.overrideWith(_RecordingSetupAction.new),
+        outboundIpProbeProvider.overrideWith(() => probe),
+        networkSettingProvider.overrideWithBuild(
+          (_, _) => const NetworkProps(bypassPrivateRoute: false),
+        ),
+      ],
+    );
+    addTearDown(localContainer.dispose);
+    globalState.container = localContainer;
+    await localContainer.read(vpnOptionsProvider.future);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: localContainer,
+        child: const TestApp(
+          child: AndroidManager(child: SizedBox(key: Key('child'))),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    fakeHost.autoMatchController.add(true);
+    await tester.pump();
+    expect(probe.watchCount, 1);
+
+    probe.setCountry('jp');
+    await tester.pump();
+    expect(fakeHost.appliedCodes, ['JP']);
+
+    probe.setCountry('JP');
+    await tester.pump();
+    expect(fakeHost.appliedCodes, ['JP']);
+
+    probe.setCountry('us');
+    await tester.pump();
+    expect(fakeHost.appliedCodes, ['JP', 'US']);
+
+    fakeHost.autoMatchController.add(false);
+    await tester.pump();
+    expect(probe.watchCount, 0);
+
+    probe.setCountry('de');
+    await tester.pump();
+    expect(fakeHost.appliedCodes, ['JP', 'US']);
 
     await tester.pumpWidget(const SizedBox.shrink());
   });

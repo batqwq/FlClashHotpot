@@ -4007,4 +4007,144 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get vpnServiceStartFailed => 'Le service VPN n\'a pas pu démarrer.';
+
+  @override
+  String get vpnHotspot => 'Point d\'accès VPN';
+
+  @override
+  String get vpnHotspotDesc => 'Partager le VPN par point d\'accès, répéteur ou partage (root requis)';
+
+  @override
+  String get hotspotOpenNative => 'VPNHotspot avancé';
+
+  @override
+  String get hotspotOpenNativeDesc => 'Configuration SoftAP, répéteur Wi-Fi, QR code, IP statique et clients';
+
+  @override
+  String get hotspotUpstream => 'Réseau amont';
+
+  @override
+  String get hotspotVpnUpstream => 'Interface VPN';
+
+  @override
+  String get hotspotFallbackUpstream => 'Interface de secours';
+
+  @override
+  String get hotspotWaitingForVpn => 'En attente du VPN';
+
+  @override
+  String get hotspotNone => 'Aucun';
+
+  @override
+  String get hotspotCountryCode => 'Code pays du point d\'accès';
+
+  @override
+  String get hotspotAutoMatchCountryCode => 'Adapter au pays de l\'IP de sortie';
+
+  @override
+  String get hotspotAutoMatchCountryCodeDesc => 'Synchroniser automatiquement le code pays Wi-Fi avec l\'IP de sortie active';
+
+  @override
+  String get hotspotCurrentCountryCode => 'Code pays Wi-Fi actuel';
+
+  @override
+  String get hotspotExitCountryCode => 'Code pays de l\'IP de sortie';
+
+  @override
+  String get hotspotSyncCountryCode => 'Synchroniser le code pays maintenant';
+
+  @override
+  String get hotspotResetCountryCode => 'Réinitialiser par défaut';
+
+  @override
+  String get hotspotTethering => 'Partage de connexion';
+
+  @override
+  String get hotspotWifiTethering => 'Point d\'accès Wi-Fi';
+
+  @override
+  String get hotspotUsbTethering => 'Partage USB';
+
+  @override
+  String get hotspotEthernetTethering => 'Partage Ethernet';
+
+  @override
+  String get hotspotRepeater => 'Répéteur Wi-Fi';
+
+  @override
+  String get hotspotTempHotspot => 'Point d\'accès temporaire';
+
+  @override
+  String get hotspotInterfaces => 'Interfaces actives';
+
+  @override
+  String get hotspotWatchReconnect => 'Réactiver à la reconnexion';
+
+  @override
+  String get hotspotClients => 'Clients connectés';
+
+  @override
+  String get hotspotNoClients => 'Aucun client connecté';
+
+  @override
+  String get hotspotBlocked => 'Bloqué';
+
+  @override
+  String get hotspotRouting => 'Routage et options';
+
+  @override
+  String get hotspotMasqueradeMode => 'Mode de masquage';
+
+  @override
+  String get hotspotMasqueradeNone => 'Aucun';
+
+  @override
+  String get hotspotMasqueradeSimple => 'Simple (iptables)';
+
+  @override
+  String get hotspotMasqueradeNetd => 'Netd';
+
+  @override
+  String get hotspotIpv6Mode => 'Mode IPv6';
+
+  @override
+  String get hotspotIpv6System => 'Système';
+
+  @override
+  String get hotspotIpv6Block => 'Bloquer';
+
+  @override
+  String get hotspotIpv6Nat => 'NAT66';
+
+  @override
+  String get hotspotTetherOffload => 'Accélération matérielle du partage';
+
+  @override
+  String get hotspotTetherOffloadDesc => 'Désactivez si les appareils connectés contournent le VPN';
+
+  @override
+  String get hotspotAutoStart => 'Démarrer au démarrage';
+
+  @override
+  String get hotspotCleanRouting => 'Nettoyer les règles de routage';
+
+  @override
+  String get hotspotCleanRoutingDesc => 'Supprimer les règles obsolètes et réappliquer les routes actives';
+
+  @override
+  String get hotspotSystemSettings => 'Paramètres système de partage';
+
+  @override
+  String get hotspotAndroidOnly => 'Le point d\'accès VPN est disponible uniquement sur Android 10+';
+
+  @override
+  String hotspotCountryCodeUpdated(Object code) {
+    return 'Code pays Wi-Fi défini sur $code';
+  }
+
+  @override
+  String get hotspotCountryCodeReset => 'Code pays Wi-Fi réinitialisé par défaut';
+
+  @override
+  String get hotspotCleaned => 'Règles de routage nettoyées';
 }

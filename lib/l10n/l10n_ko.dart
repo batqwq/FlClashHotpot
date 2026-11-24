@@ -3855,4 +3855,144 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get vpnServiceStartFailed => 'VPN 서비스를 시작하지 못했습니다.';
+
+  @override
+  String get vpnHotspot => 'VPN 핫스팟';
+
+  @override
+  String get vpnHotspotDesc => '핫스팟, 중계기 또는 테더링으로 VPN 공유 (루트 필요)';
+
+  @override
+  String get hotspotOpenNative => '고급 VPNHotspot';
+
+  @override
+  String get hotspotOpenNativeDesc => 'SoftAP 설정, Wi-Fi 중계기, QR 코드, 고정 IP 및 클라이언트 관리';
+
+  @override
+  String get hotspotUpstream => '업스트림';
+
+  @override
+  String get hotspotVpnUpstream => 'VPN 인터페이스';
+
+  @override
+  String get hotspotFallbackUpstream => '대체 인터페이스';
+
+  @override
+  String get hotspotWaitingForVpn => 'VPN 대기 중';
+
+  @override
+  String get hotspotNone => '없음';
+
+  @override
+  String get hotspotCountryCode => '핫스팟 국가 코드';
+
+  @override
+  String get hotspotAutoMatchCountryCode => '출구 IP 국가 코드 자동 일치';
+
+  @override
+  String get hotspotAutoMatchCountryCodeDesc => 'Wi-Fi 핫스팟 국가 코드를 현재 출구 IP의 국가와 자동으로 동기화합니다';
+
+  @override
+  String get hotspotCurrentCountryCode => '현재 Wi-Fi 국가 코드';
+
+  @override
+  String get hotspotExitCountryCode => '출구 IP 국가 코드';
+
+  @override
+  String get hotspotSyncCountryCode => '지금 출구 국가 코드 동기화';
+
+  @override
+  String get hotspotResetCountryCode => '시스템 기본값으로 재설정';
+
+  @override
+  String get hotspotTethering => '테더링';
+
+  @override
+  String get hotspotWifiTethering => 'Wi-Fi 핫스팟';
+
+  @override
+  String get hotspotUsbTethering => 'USB 테더링';
+
+  @override
+  String get hotspotEthernetTethering => '이더넷 테더링';
+
+  @override
+  String get hotspotRepeater => 'Wi-Fi 중계기';
+
+  @override
+  String get hotspotTempHotspot => '임시 핫스팟';
+
+  @override
+  String get hotspotInterfaces => '활성 인터페이스';
+
+  @override
+  String get hotspotWatchReconnect => '재연결 시 자동 활성화';
+
+  @override
+  String get hotspotClients => '연결된 클라이언트';
+
+  @override
+  String get hotspotNoClients => '연결된 클라이언트가 없습니다';
+
+  @override
+  String get hotspotBlocked => '차단됨';
+
+  @override
+  String get hotspotRouting => '라우팅 및 옵션';
+
+  @override
+  String get hotspotMasqueradeMode => '마스커레이드 모드';
+
+  @override
+  String get hotspotMasqueradeNone => '없음';
+
+  @override
+  String get hotspotMasqueradeSimple => '간단 (iptables)';
+
+  @override
+  String get hotspotMasqueradeNetd => 'Netd';
+
+  @override
+  String get hotspotIpv6Mode => 'IPv6 모드';
+
+  @override
+  String get hotspotIpv6System => '시스템';
+
+  @override
+  String get hotspotIpv6Block => '차단';
+
+  @override
+  String get hotspotIpv6Nat => 'NAT66';
+
+  @override
+  String get hotspotTetherOffload => '테더링 하드웨어 가속';
+
+  @override
+  String get hotspotTetherOffloadDesc => '연결된 기기가 VPN을 우회하면 비활성화하세요';
+
+  @override
+  String get hotspotAutoStart => '부팅 시 자동 시작';
+
+  @override
+  String get hotspotCleanRouting => '라우팅 규칙 정리';
+
+  @override
+  String get hotspotCleanRoutingDesc => '남아 있는 규칙을 지우고 활성 경로를 다시 적용합니다';
+
+  @override
+  String get hotspotSystemSettings => '시스템 테더링 설정';
+
+  @override
+  String get hotspotAndroidOnly => 'VPN 핫스팟은 Android 10 이상에서만 사용할 수 있습니다';
+
+  @override
+  String hotspotCountryCodeUpdated(Object code) {
+    return 'Wi-Fi 국가 코드를 $code(으)로 설정했습니다';
+  }
+
+  @override
+  String get hotspotCountryCodeReset => 'Wi-Fi 국가 코드를 시스템 기본값으로 재설정했습니다';
+
+  @override
+  String get hotspotCleaned => '라우팅 규칙을 정리했습니다';
 }

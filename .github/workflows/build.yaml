@@ -267,6 +267,14 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/dev' }}
 
+      - name: Setup Rust Android target & cargo-ndk
+        run: rustup target add aarch64-linux-android
+
+      - name: Install cargo-ndk
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-ndk
+
       - name: Run Android unit tests
         working-directory: android
         env:
@@ -282,9 +290,87 @@ jobs:
           chmod +x gradlew
           # No JVM unit test loads the Core or the Flutter build, but `:core` compiles against
           # the gomobile AAR, so one ABI of it is built.
-          ./gradlew :common:testDebugUnitTest :service:testDebugUnitTest :app:testDebugUnitTest \
+          ./gradlew :common:testDebugUnitTest :service:testDebugUnitTest :vpnhotspot:testDebugUnitTest :app:testDebugUnitTest \
             -Ptarget-platform=android-arm64 \
             -x :app:compileFlutterBuildDebug -x :app:copyFlutterAssetsDebug
+
+  android-apk:
+    name: Android APK
+    if: (github.event_name == 'workflow_dispatch' || !github.event.repository.private) && !(github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: ${{ env.BRANCH_CACHE }}
+          cache-dependency-path: |
+            core/go.sum
+            android/core/build.gradle.kts
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: android-apk
+          workspaces: |
+            plugins/rust_api/rust
+            android/vpnhotspot/src/main/rust/vpnhotspotd
+          cache-directories: .dart_tool/hooks_runner
+          save-if: ${{ env.BRANCH_CACHE }}
+
+      - name: Setup Rust Android targets
+        run: rustup target add aarch64-linux-android
+
+      - name: Install cargo-ndk
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-ndk
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: ${{ env.BRANCH_CACHE }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/dev' }}
+
+      - name: Setup NDK
+        uses: nttld/setup-ndk@v1
+        id: ndk
+        with:
+          ndk-version: ${{ env.NDK_VERSION }}
+          add-to-path: true
+          link-to-sdk: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android arm64 APK
+        env:
+          ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
+        run: flutter build apk --release --split-per-abi --target-platform android-arm64
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-android-arm64-apk
+          path: build/app/outputs/flutter-apk/*.apk
+          overwrite: true
 
   rust:
     name: Rust
@@ -300,6 +386,7 @@ jobs:
           workspaces: |
             services/helper
             plugins/rust_api/rust
+            android/vpnhotspot/src/main/rust/vpnhotspotd
           save-if: ${{ env.BRANCH_CACHE }}
 
       - name: Install Linux build dependencies
@@ -316,6 +403,7 @@ jobs:
         run: |
           cargo test --manifest-path services/helper/Cargo.toml
           cargo test --manifest-path plugins/rust_api/rust/Cargo.toml
+          cargo check --manifest-path android/vpnhotspot/src/main/rust/vpnhotspotd/Cargo.toml --locked --all-targets
 
   windows-helper-test:
     name: Windows helper test
@@ -471,6 +559,16 @@ jobs:
           ndk-version: ${{ env.NDK_VERSION }}
           add-to-path: true
           link-to-sdk: true
+
+      - name: Setup Rust Android targets
+        if: startsWith(matrix.platform,'android')
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
+
+      - name: Install cargo-ndk
+        if: startsWith(matrix.platform,'android')
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-ndk
 
       - name: Get Flutter Dependency
         run: |

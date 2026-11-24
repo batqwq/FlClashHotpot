@@ -3954,4 +3954,144 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get vpnServiceStartFailed => 'Не удалось запустить службу VPN.';
+
+  @override
+  String get vpnHotspot => 'VPN-точка доступа';
+
+  @override
+  String get vpnHotspotDesc => 'Раздача VPN через точку доступа, репитер или модем (нужен root)';
+
+  @override
+  String get hotspotOpenNative => 'Расширенный VPNHotspot';
+
+  @override
+  String get hotspotOpenNativeDesc => 'Настройка SoftAP, репитера Wi-Fi, QR-код, статический IP и клиенты';
+
+  @override
+  String get hotspotUpstream => 'Исходящая сеть';
+
+  @override
+  String get hotspotVpnUpstream => 'Интерфейс VPN';
+
+  @override
+  String get hotspotFallbackUpstream => 'Резервный интерфейс';
+
+  @override
+  String get hotspotWaitingForVpn => 'Ожидание VPN';
+
+  @override
+  String get hotspotNone => 'Нет';
+
+  @override
+  String get hotspotCountryCode => 'Код страны точки доступа';
+
+  @override
+  String get hotspotAutoMatchCountryCode => 'Автокод страны по выходному IP';
+
+  @override
+  String get hotspotAutoMatchCountryCodeDesc => 'Автоматически синхронизировать код страны Wi-Fi с текущим выходным IP';
+
+  @override
+  String get hotspotCurrentCountryCode => 'Текущий код страны Wi-Fi';
+
+  @override
+  String get hotspotExitCountryCode => 'Код страны выходного IP';
+
+  @override
+  String get hotspotSyncCountryCode => 'Синхронизировать код страны сейчас';
+
+  @override
+  String get hotspotResetCountryCode => 'Сбросить на системный';
+
+  @override
+  String get hotspotTethering => 'Раздача сети';
+
+  @override
+  String get hotspotWifiTethering => 'Точка доступа Wi-Fi';
+
+  @override
+  String get hotspotUsbTethering => 'USB-модем';
+
+  @override
+  String get hotspotEthernetTethering => 'Ethernet-модем';
+
+  @override
+  String get hotspotRepeater => 'Wi-Fi репитер';
+
+  @override
+  String get hotspotTempHotspot => 'Временная точка доступа';
+
+  @override
+  String get hotspotInterfaces => 'Активные интерфейсы';
+
+  @override
+  String get hotspotWatchReconnect => 'Включать при переподключении';
+
+  @override
+  String get hotspotClients => 'Подключённые клиенты';
+
+  @override
+  String get hotspotNoClients => 'Нет подключённых клиентов';
+
+  @override
+  String get hotspotBlocked => 'Заблокирован';
+
+  @override
+  String get hotspotRouting => 'Маршрутизация и параметры';
+
+  @override
+  String get hotspotMasqueradeMode => 'Режим маскарадинга';
+
+  @override
+  String get hotspotMasqueradeNone => 'Нет';
+
+  @override
+  String get hotspotMasqueradeSimple => 'Простой (iptables)';
+
+  @override
+  String get hotspotMasqueradeNetd => 'Netd';
+
+  @override
+  String get hotspotIpv6Mode => 'Режим IPv6';
+
+  @override
+  String get hotspotIpv6System => 'Системный';
+
+  @override
+  String get hotspotIpv6Block => 'Блокировать';
+
+  @override
+  String get hotspotIpv6Nat => 'NAT66';
+
+  @override
+  String get hotspotTetherOffload => 'Аппаратное ускорение модема';
+
+  @override
+  String get hotspotTetherOffloadDesc => 'Отключите, если устройства идут в обход VPN';
+
+  @override
+  String get hotspotAutoStart => 'Запуск при загрузке';
+
+  @override
+  String get hotspotCleanRouting => 'Очистить правила маршрутизации';
+
+  @override
+  String get hotspotCleanRoutingDesc => 'Удалить устаревшие правила и переприменить маршруты';
+
+  @override
+  String get hotspotSystemSettings => 'Системные настройки модема';
+
+  @override
+  String get hotspotAndroidOnly => 'VPN-точка доступа доступна только на Android 10+';
+
+  @override
+  String hotspotCountryCodeUpdated(Object code) {
+    return 'Код страны Wi-Fi установлен: $code';
+  }
+
+  @override
+  String get hotspotCountryCodeReset => 'Код страны Wi-Fi сброшен на системный';
+
+  @override
+  String get hotspotCleaned => 'Правила маршрутизации очищены';
 }

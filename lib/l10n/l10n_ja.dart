@@ -3780,4 +3780,144 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get vpnServiceStartFailed => 'VPN サービスを起動できませんでした。';
+
+  @override
+  String get vpnHotspot => 'VPN ホットスポット';
+
+  @override
+  String get vpnHotspotDesc => 'ホットスポット、リピーター、テザリングで VPN を共有（Root 必須）';
+
+  @override
+  String get hotspotOpenNative => '高度な VPNHotspot';
+
+  @override
+  String get hotspotOpenNativeDesc => 'SoftAP 設定、リピーター Wi-Fi、QR コード、静的 IP、クライアント管理';
+
+  @override
+  String get hotspotUpstream => 'アップストリーム';
+
+  @override
+  String get hotspotVpnUpstream => 'VPN インターフェース';
+
+  @override
+  String get hotspotFallbackUpstream => 'フォールバックインターフェース';
+
+  @override
+  String get hotspotWaitingForVpn => 'VPN 接続待機中';
+
+  @override
+  String get hotspotNone => 'なし';
+
+  @override
+  String get hotspotCountryCode => 'ホットスポット国コード';
+
+  @override
+  String get hotspotAutoMatchCountryCode => '出口 IP の国コードに自動一致';
+
+  @override
+  String get hotspotAutoMatchCountryCodeDesc => 'Wi-Fi ホットスポットの国コードを現在の出口 IP の国に自動同期します';
+
+  @override
+  String get hotspotCurrentCountryCode => '現在の Wi-Fi 国コード';
+
+  @override
+  String get hotspotExitCountryCode => '出口 IP の国コード';
+
+  @override
+  String get hotspotSyncCountryCode => '今すぐ出口国コードを同期';
+
+  @override
+  String get hotspotResetCountryCode => 'システムデフォルトに戻す';
+
+  @override
+  String get hotspotTethering => 'テザリング';
+
+  @override
+  String get hotspotWifiTethering => 'Wi-Fi ホットスポット';
+
+  @override
+  String get hotspotUsbTethering => 'USB テザリング';
+
+  @override
+  String get hotspotEthernetTethering => 'イーサネットテザリング';
+
+  @override
+  String get hotspotRepeater => 'Wi-Fi リピーター';
+
+  @override
+  String get hotspotTempHotspot => '一時ホットスポット';
+
+  @override
+  String get hotspotInterfaces => 'アクティブなインターフェース';
+
+  @override
+  String get hotspotWatchReconnect => '再接続時に自動有効化';
+
+  @override
+  String get hotspotClients => '接続中のクライアント';
+
+  @override
+  String get hotspotNoClients => '接続中のクライアントはありません';
+
+  @override
+  String get hotspotBlocked => 'ブロック済み';
+
+  @override
+  String get hotspotRouting => 'ルーティングとオプション';
+
+  @override
+  String get hotspotMasqueradeMode => 'マスカレードモード';
+
+  @override
+  String get hotspotMasqueradeNone => 'なし';
+
+  @override
+  String get hotspotMasqueradeSimple => 'シンプル（iptables）';
+
+  @override
+  String get hotspotMasqueradeNetd => 'Netd';
+
+  @override
+  String get hotspotIpv6Mode => 'IPv6 モード';
+
+  @override
+  String get hotspotIpv6System => 'システム';
+
+  @override
+  String get hotspotIpv6Block => 'ブロック';
+
+  @override
+  String get hotspotIpv6Nat => 'NAT66';
+
+  @override
+  String get hotspotTetherOffload => 'テザリングハードウェアアクセラレーション';
+
+  @override
+  String get hotspotTetherOffloadDesc => '接続端末が VPN を経由しない場合は無効にしてください';
+
+  @override
+  String get hotspotAutoStart => '起動時に自動開始';
+
+  @override
+  String get hotspotCleanRouting => 'ルーティングルールをクリア';
+
+  @override
+  String get hotspotCleanRoutingDesc => '古いルールを削除して現在のテザリングルートを再適用します';
+
+  @override
+  String get hotspotSystemSettings => 'システムのテザリング設定';
+
+  @override
+  String get hotspotAndroidOnly => 'VPN ホットスポットは Android 10 以降でのみ利用可能です';
+
+  @override
+  String hotspotCountryCodeUpdated(Object code) {
+    return 'Wi-Fi 国コードを $code に設定しました';
+  }
+
+  @override
+  String get hotspotCountryCodeReset => 'Wi-Fi 国コードをシステムデフォルトに戻しました';
+
+  @override
+  String get hotspotCleaned => 'ルーティングルールをクリアしました';
 }

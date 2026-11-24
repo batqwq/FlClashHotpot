@@ -9,6 +9,7 @@ import 'package:fl_clash/providers/config.dart';
 import 'package:fl_clash/providers/mitm.dart';
 import 'package:fl_clash/views/config/override.dart';
 import 'package:fl_clash/views/config/tun.dart';
+import 'package:fl_clash/views/hotspot.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -503,6 +504,19 @@ List<Widget> networkOptionsItems({
   ];
 }
 
+class _VpnHotspotEntryItem extends StatelessWidget {
+  const _VpnHotspotEntryItem();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListItem.open(
+      title: Text(context.appLocalizations.vpnHotspot),
+      subtitle: Text(context.appLocalizations.vpnHotspotDesc),
+      widget: const HotspotView(),
+    );
+  }
+}
+
 class VpnSections extends ConsumerWidget {
   const VpnSections({super.key});
 
@@ -523,6 +537,7 @@ class VpnSections extends ConsumerWidget {
             AllowBypassItem(),
             Ipv6Item(),
             DNSHijackingItem(),
+            _VpnHotspotEntryItem(),
           ],
           footer: [
             if (authenticationEnable)

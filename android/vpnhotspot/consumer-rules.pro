@@ -1,0 +1,14 @@
+-keepattributes SourceFile,LineNumberTable
+-keep class be.mygod.vpnhotspot.root.** { *; }
+-keep class be.mygod.vpnhotspot.BootReceiver$** { *; }
+-keep class be.mygod.vpnhotspot.TetheringService$Starter { *; }
+-keep class be.mygod.vpnhotspot.RepeaterService$Starter { *; }
+-keep class be.mygod.vpnhotspot.LocalOnlyHotspotService$Starter { *; }
+-keep class be.mygod.vpnhotspot.net.wifi.WifiApManager$LocalOnlyHotspotEvent** { *; }
+-keep class be.mygod.vpnhotspot.net.wifi.WifiApManager$Event** { *; }
+-keep class be.mygod.vpnhotspot.net.TetheringManagerCompat$Event** { *; }
+-keep class be.mygod.librootkotlinx.** { *; }
+-keep class android.hardware.wifi.supplicant.** { *; }
+-keep class android.hardware.wifi.common.** { *; }
+-keep class be.mygod.vpnhotspot.net.wifi.SoftApConfigurationCompat** { *; }
+-keep class be.mygod.vpnhotspot.net.wifi.WifiSsidCompat** { *; }

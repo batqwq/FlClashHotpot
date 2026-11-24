@@ -3960,4 +3960,144 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vpnServiceStartFailed => 'The VPN service could not start.';
+
+  @override
+  String get vpnHotspot => 'VPN Hotspot';
+
+  @override
+  String get vpnHotspotDesc => 'Share VPN over hotspot, repeater, or tethering (root required)';
+
+  @override
+  String get hotspotOpenNative => 'Advanced VPNHotspot';
+
+  @override
+  String get hotspotOpenNativeDesc => 'SoftAP config, repeater Wi-Fi, QR code, static IP, and clients';
+
+  @override
+  String get hotspotUpstream => 'Upstream';
+
+  @override
+  String get hotspotVpnUpstream => 'VPN interface';
+
+  @override
+  String get hotspotFallbackUpstream => 'Fallback interface';
+
+  @override
+  String get hotspotWaitingForVpn => 'Waiting for VPN';
+
+  @override
+  String get hotspotNone => 'None';
+
+  @override
+  String get hotspotCountryCode => 'Hotspot country code';
+
+  @override
+  String get hotspotAutoMatchCountryCode => 'Auto-match exit IP country code';
+
+  @override
+  String get hotspotAutoMatchCountryCodeDesc => 'Automatically set the Wi-Fi hotspot country code to match the active exit IP';
+
+  @override
+  String get hotspotCurrentCountryCode => 'Current Wi-Fi country code';
+
+  @override
+  String get hotspotExitCountryCode => 'Exit IP country code';
+
+  @override
+  String get hotspotSyncCountryCode => 'Sync exit country code now';
+
+  @override
+  String get hotspotResetCountryCode => 'Reset to system default';
+
+  @override
+  String get hotspotTethering => 'Tethering';
+
+  @override
+  String get hotspotWifiTethering => 'Wi-Fi hotspot';
+
+  @override
+  String get hotspotUsbTethering => 'USB tethering';
+
+  @override
+  String get hotspotEthernetTethering => 'Ethernet tethering';
+
+  @override
+  String get hotspotRepeater => 'Wi-Fi repeater';
+
+  @override
+  String get hotspotTempHotspot => 'Temporary hotspot';
+
+  @override
+  String get hotspotInterfaces => 'Active interfaces';
+
+  @override
+  String get hotspotWatchReconnect => 'Auto-enable on reconnect';
+
+  @override
+  String get hotspotClients => 'Connected clients';
+
+  @override
+  String get hotspotNoClients => 'No connected clients';
+
+  @override
+  String get hotspotBlocked => 'Blocked';
+
+  @override
+  String get hotspotRouting => 'Routing & options';
+
+  @override
+  String get hotspotMasqueradeMode => 'Masquerade mode';
+
+  @override
+  String get hotspotMasqueradeNone => 'None';
+
+  @override
+  String get hotspotMasqueradeSimple => 'Simple (iptables)';
+
+  @override
+  String get hotspotMasqueradeNetd => 'Netd';
+
+  @override
+  String get hotspotIpv6Mode => 'IPv6 mode';
+
+  @override
+  String get hotspotIpv6System => 'System';
+
+  @override
+  String get hotspotIpv6Block => 'Block';
+
+  @override
+  String get hotspotIpv6Nat => 'NAT66';
+
+  @override
+  String get hotspotTetherOffload => 'Tethering hardware acceleration';
+
+  @override
+  String get hotspotTetherOffloadDesc => 'Disable if tethered devices bypass the VPN';
+
+  @override
+  String get hotspotAutoStart => 'Start on boot';
+
+  @override
+  String get hotspotCleanRouting => 'Clean routing rules';
+
+  @override
+  String get hotspotCleanRoutingDesc => 'Clear stale rules and reapply active tethering routes';
+
+  @override
+  String get hotspotSystemSettings => 'System tethering settings';
+
+  @override
+  String get hotspotAndroidOnly => 'VPN Hotspot is only available on Android 10+';
+
+  @override
+  String hotspotCountryCodeUpdated(Object code) {
+    return 'Wi-Fi country code set to $code';
+  }
+
+  @override
+  String get hotspotCountryCodeReset => 'Wi-Fi country code reset to system default';
+
+  @override
+  String get hotspotCleaned => 'Routing rules cleaned';
 }

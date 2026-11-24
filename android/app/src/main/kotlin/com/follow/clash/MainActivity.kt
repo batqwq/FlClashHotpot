@@ -2,6 +2,7 @@ package com.follow.clash
 
 import com.follow.clash.plugins.AppPlugin
 import com.follow.clash.plugins.BatteryPlugin
+import com.follow.clash.plugins.HotspotPlugin
 import com.follow.clash.plugins.LinkPlugin
 import com.follow.clash.plugins.ServicePlugin
 import com.follow.clash.plugins.TilePlugin
@@ -14,6 +15,7 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         flutterEngine.plugins.add(AppPlugin())
         flutterEngine.plugins.add(BatteryPlugin())
+        flutterEngine.plugins.add(HotspotPlugin())
         flutterEngine.plugins.add(LinkPlugin())
         flutterEngine.plugins.add(ServicePlugin())
         flutterEngine.plugins.add(TilePlugin())

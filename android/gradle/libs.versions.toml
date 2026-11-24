@@ -1,5 +1,5 @@
 [versions]
-minSdk = "24"
+minSdk = "29"
 targetSdk = "37"
 compileSdk = "37"
 ndkVersion = "28.2.13676358"
@@ -9,11 +9,37 @@ gson = "2.14.0"
 smaliDexlib2 = "3.0.10"
 junit = "4.13.2"
 kotlinxCoroutines = "1.11.0"
+lifecycle = "2.11.0"
+room = "2.8.4"
+wire = "6.4.5"
 
 [libraries]
+activity-compose = "androidx.activity:activity-compose:1.13.0"
 androidx-core = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+annotation-jvm = "androidx.annotation:annotation-jvm:1.10.0"
+browser = "androidx.browser:browser:1.10.0"
+compose-bom = "androidx.compose:compose-bom-alpha:2026.07.01"
 core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+hiddenapibypass = "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"
 junit = { module = "junit:junit", version.ref = "junit" }
+kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.5.1"
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+ktor-io-jvm = "io.ktor:ktor-io-jvm:3.5.2"
+librootkotlinx = "be.mygod.librootkotlinx:librootkotlinx:2.0.0-beta02"
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+navigation-compose = "androidx.navigation:navigation-compose:2.10.0-beta01"
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 smali-dexlib2 = { module = "com.android.tools.smali:smali-dexlib2", version.ref = "smaliDexlib2" }
+timber = "com.jakewharton.timber:timber:5.0.1"
+wire-runtime = { module = "com.squareup.wire:wire-runtime", version.ref = "wire" }
+zxing-core = "com.google.zxing:core:3.5.4"
+
+[plugins]
+compose-compiler = "org.jetbrains.kotlin.plugin.compose:2.4.20"
+kotlin-parcelize = "org.jetbrains.kotlin.plugin.parcelize:2.4.20"
+ksp = "com.google.devtools.ksp:2.3.10"
+wire = { id = "com.squareup.wire", version.ref = "wire" }

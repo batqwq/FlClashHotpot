@@ -3731,4 +3731,144 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get vpnServiceStartFailed => 'VPN 服务无法启动。';
+
+  @override
+  String get vpnHotspot => 'VPN 热点';
+
+  @override
+  String get vpnHotspotDesc => '通过热点、中继或网络共享分享 VPN（需要 Root）';
+
+  @override
+  String get hotspotOpenNative => '高级 VPNHotspot 界面';
+
+  @override
+  String get hotspotOpenNativeDesc => '配置热点参数、中继 Wi-Fi、二维码、静态 IP 与客户端管理';
+
+  @override
+  String get hotspotUpstream => '上游网络';
+
+  @override
+  String get hotspotVpnUpstream => 'VPN 接口';
+
+  @override
+  String get hotspotFallbackUpstream => '回退接口';
+
+  @override
+  String get hotspotWaitingForVpn => '等待 VPN 连接';
+
+  @override
+  String get hotspotNone => '无';
+
+  @override
+  String get hotspotCountryCode => '热点国家代码';
+
+  @override
+  String get hotspotAutoMatchCountryCode => '自动匹配出口 IP 国家代码';
+
+  @override
+  String get hotspotAutoMatchCountryCodeDesc => '自动将 Wi-Fi 热点国家代码同步为当前出口 IP 所在国家/地区';
+
+  @override
+  String get hotspotCurrentCountryCode => '当前 Wi-Fi 国家代码';
+
+  @override
+  String get hotspotExitCountryCode => '出口 IP 国家代码';
+
+  @override
+  String get hotspotSyncCountryCode => '立即同步出口国家代码';
+
+  @override
+  String get hotspotResetCountryCode => '恢复系统默认国家代码';
+
+  @override
+  String get hotspotTethering => '网络共享';
+
+  @override
+  String get hotspotWifiTethering => 'Wi-Fi 热点';
+
+  @override
+  String get hotspotUsbTethering => 'USB 网络共享';
+
+  @override
+  String get hotspotEthernetTethering => '以太网共享';
+
+  @override
+  String get hotspotRepeater => 'Wi-Fi 中继';
+
+  @override
+  String get hotspotTempHotspot => '临时热点';
+
+  @override
+  String get hotspotInterfaces => '活跃共享接口';
+
+  @override
+  String get hotspotWatchReconnect => '重连时自动开启';
+
+  @override
+  String get hotspotClients => '已连接设备';
+
+  @override
+  String get hotspotNoClients => '暂无已连接设备';
+
+  @override
+  String get hotspotBlocked => '已拦截';
+
+  @override
+  String get hotspotRouting => '路由与选项';
+
+  @override
+  String get hotspotMasqueradeMode => 'NAT 伪装模式';
+
+  @override
+  String get hotspotMasqueradeNone => '无';
+
+  @override
+  String get hotspotMasqueradeSimple => '简单（iptables）';
+
+  @override
+  String get hotspotMasqueradeNetd => 'Netd';
+
+  @override
+  String get hotspotIpv6Mode => 'IPv6 模式';
+
+  @override
+  String get hotspotIpv6System => '系统默认';
+
+  @override
+  String get hotspotIpv6Block => '禁用';
+
+  @override
+  String get hotspotIpv6Nat => 'NAT66';
+
+  @override
+  String get hotspotTetherOffload => '共享硬件加速（Offload）';
+
+  @override
+  String get hotspotTetherOffloadDesc => '若共享设备无法通过 VPN 上网，请关闭此项';
+
+  @override
+  String get hotspotAutoStart => '开机自动启动';
+
+  @override
+  String get hotspotCleanRouting => '清理路由规则';
+
+  @override
+  String get hotspotCleanRoutingDesc => '清理残留规则并重新应用当前共享路由';
+
+  @override
+  String get hotspotSystemSettings => '系统热点与共享设置';
+
+  @override
+  String get hotspotAndroidOnly => 'VPN 热点仅支持 Android 10 及以上系统';
+
+  @override
+  String hotspotCountryCodeUpdated(Object code) {
+    return 'Wi-Fi 国家代码已设为 $code';
+  }
+
+  @override
+  String get hotspotCountryCodeReset => 'Wi-Fi 国家代码已恢复系统默认';
+
+  @override
+  String get hotspotCleaned => '路由规则已清理';
 }

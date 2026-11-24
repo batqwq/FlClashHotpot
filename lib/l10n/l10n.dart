@@ -6947,6 +6947,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The VPN service could not start.'**
   String get vpnServiceStartFailed;
+
+  /// No description provided for @vpnHotspot.
+  ///
+  /// In en, this message translates to:
+  /// **'VPN Hotspot'**
+  String get vpnHotspot;
+
+  /// No description provided for @vpnHotspotDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Share VPN over hotspot, repeater, or tethering (root required)'**
+  String get vpnHotspotDesc;
+
+  /// No description provided for @hotspotOpenNative.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced VPNHotspot'**
+  String get hotspotOpenNative;
+
+  /// No description provided for @hotspotOpenNativeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'SoftAP config, repeater Wi-Fi, QR code, static IP, and clients'**
+  String get hotspotOpenNativeDesc;
+
+  /// No description provided for @hotspotUpstream.
+  ///
+  /// In en, this message translates to:
+  /// **'Upstream'**
+  String get hotspotUpstream;
+
+  /// No description provided for @hotspotVpnUpstream.
+  ///
+  /// In en, this message translates to:
+  /// **'VPN interface'**
+  String get hotspotVpnUpstream;
+
+  /// No description provided for @hotspotFallbackUpstream.
+  ///
+  /// In en, this message translates to:
+  /// **'Fallback interface'**
+  String get hotspotFallbackUpstream;
+
+  /// No description provided for @hotspotWaitingForVpn.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for VPN'**
+  String get hotspotWaitingForVpn;
+
+  /// No description provided for @hotspotNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get hotspotNone;
+
+  /// No description provided for @hotspotCountryCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotspot country code'**
+  String get hotspotCountryCode;
+
+  /// No description provided for @hotspotAutoMatchCountryCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-match exit IP country code'**
+  String get hotspotAutoMatchCountryCode;
+
+  /// No description provided for @hotspotAutoMatchCountryCodeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically set the Wi-Fi hotspot country code to match the active exit IP'**
+  String get hotspotAutoMatchCountryCodeDesc;
+
+  /// No description provided for @hotspotCurrentCountryCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Wi-Fi country code'**
+  String get hotspotCurrentCountryCode;
+
+  /// No description provided for @hotspotExitCountryCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit IP country code'**
+  String get hotspotExitCountryCode;
+
+  /// No description provided for @hotspotSyncCountryCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync exit country code now'**
+  String get hotspotSyncCountryCode;
+
+  /// No description provided for @hotspotResetCountryCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to system default'**
+  String get hotspotResetCountryCode;
+
+  /// No description provided for @hotspotTethering.
+  ///
+  /// In en, this message translates to:
+  /// **'Tethering'**
+  String get hotspotTethering;
+
+  /// No description provided for @hotspotWifiTethering.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi hotspot'**
+  String get hotspotWifiTethering;
+
+  /// No description provided for @hotspotUsbTethering.
+  ///
+  /// In en, this message translates to:
+  /// **'USB tethering'**
+  String get hotspotUsbTethering;
+
+  /// No description provided for @hotspotEthernetTethering.
+  ///
+  /// In en, this message translates to:
+  /// **'Ethernet tethering'**
+  String get hotspotEthernetTethering;
+
+  /// No description provided for @hotspotRepeater.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi repeater'**
+  String get hotspotRepeater;
+
+  /// No description provided for @hotspotTempHotspot.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary hotspot'**
+  String get hotspotTempHotspot;
+
+  /// No description provided for @hotspotInterfaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Active interfaces'**
+  String get hotspotInterfaces;
+
+  /// No description provided for @hotspotWatchReconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-enable on reconnect'**
+  String get hotspotWatchReconnect;
+
+  /// No description provided for @hotspotClients.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected clients'**
+  String get hotspotClients;
+
+  /// No description provided for @hotspotNoClients.
+  ///
+  /// In en, this message translates to:
+  /// **'No connected clients'**
+  String get hotspotNoClients;
+
+  /// No description provided for @hotspotBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked'**
+  String get hotspotBlocked;
+
+  /// No description provided for @hotspotRouting.
+  ///
+  /// In en, this message translates to:
+  /// **'Routing & options'**
+  String get hotspotRouting;
+
+  /// No description provided for @hotspotMasqueradeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Masquerade mode'**
+  String get hotspotMasqueradeMode;
+
+  /// No description provided for @hotspotMasqueradeNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get hotspotMasqueradeNone;
+
+  /// No description provided for @hotspotMasqueradeSimple.
+  ///
+  /// In en, this message translates to:
+  /// **'Simple (iptables)'**
+  String get hotspotMasqueradeSimple;
+
+  /// No description provided for @hotspotMasqueradeNetd.
+  ///
+  /// In en, this message translates to:
+  /// **'Netd'**
+  String get hotspotMasqueradeNetd;
+
+  /// No description provided for @hotspotIpv6Mode.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv6 mode'**
+  String get hotspotIpv6Mode;
+
+  /// No description provided for @hotspotIpv6System.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get hotspotIpv6System;
+
+  /// No description provided for @hotspotIpv6Block.
+  ///
+  /// In en, this message translates to:
+  /// **'Block'**
+  String get hotspotIpv6Block;
+
+  /// No description provided for @hotspotIpv6Nat.
+  ///
+  /// In en, this message translates to:
+  /// **'NAT66'**
+  String get hotspotIpv6Nat;
+
+  /// No description provided for @hotspotTetherOffload.
+  ///
+  /// In en, this message translates to:
+  /// **'Tethering hardware acceleration'**
+  String get hotspotTetherOffload;
+
+  /// No description provided for @hotspotTetherOffloadDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable if tethered devices bypass the VPN'**
+  String get hotspotTetherOffloadDesc;
+
+  /// No description provided for @hotspotAutoStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start on boot'**
+  String get hotspotAutoStart;
+
+  /// No description provided for @hotspotCleanRouting.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean routing rules'**
+  String get hotspotCleanRouting;
+
+  /// No description provided for @hotspotCleanRoutingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear stale rules and reapply active tethering routes'**
+  String get hotspotCleanRoutingDesc;
+
+  /// No description provided for @hotspotSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'System tethering settings'**
+  String get hotspotSystemSettings;
+
+  /// No description provided for @hotspotAndroidOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'VPN Hotspot is only available on Android 10+'**
+  String get hotspotAndroidOnly;
+
+  /// No description provided for @hotspotCountryCodeUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi country code set to {code}'**
+  String hotspotCountryCodeUpdated(Object code);
+
+  /// No description provided for @hotspotCountryCodeReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi country code reset to system default'**
+  String get hotspotCountryCodeReset;
+
+  /// No description provided for @hotspotCleaned.
+  ///
+  /// In en, this message translates to:
+  /// **'Routing rules cleaned'**
+  String get hotspotCleaned;
 }
 
 class _AppLocalizationsDelegate
