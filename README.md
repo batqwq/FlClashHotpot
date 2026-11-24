@@ -74,6 +74,12 @@ FlClash starts the core only after the disclaimer is accepted. Where nobody can 
 
 ## Usage
 
+**Share the VPN on Android.** On a rooted Android 10 or newer device, start FlClash's VPN and open **Tools > VPN Hotspot**.
+The optional **Auto-match exit IP country code** setting requests a Wi-Fi regulatory country override based on the routed
+exit IP. The exit IP does not tell you where the device is physically located: only enable this if the matching code is
+permitted where you use the device. Support depends on the Android build and Wi-Fi driver. Turn matching off before
+using **Reset country code** so a later exit-IP update does not reapply the override.
+
 **Import a profile from a link.** Opening a link in this form imports the subscription into FlClash. The `clashmeta://`
 and `flclash://` schemes work the same way.
 

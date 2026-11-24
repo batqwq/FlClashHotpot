@@ -50,6 +50,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.io.IOException
 import java.net.NetworkInterface
 import java.net.SocketException
 
@@ -494,23 +495,15 @@ object HotspotController {
 
     suspend fun setAutoMatchCountryCode(enabled: Boolean) {
         WifiCountryCodeCommands.autoMatchEnabled = enabled
+        withContext(scope.coroutineContext) { rebuildSnapshot() }
         if (!enabled && WifiCountryCodeCommands.appliedCountryCode != null) {
-            try {
-                RootManager.use { it.execute(WifiCountryCodeCommands.ClearCountryCode()) }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                Timber.w(e)
-            }
-            WifiCountryCodeCommands.appliedCountryCode = null
-            refreshCountryCode()
-        } else {
-            withContext(scope.coroutineContext) { rebuildSnapshot() }
+            setCountryCode(null)
         }
     }
 
     suspend fun setCountryCode(countryCode: String?): String? {
         val normalized = WifiCountryCodeCommands.normalizeCountryCode(countryCode)
+        require(countryCode == null || normalized != null) { "Invalid Wi-Fi country code" }
         val ok = RootManager.use { server ->
             if (normalized == null) {
                 server.execute(WifiCountryCodeCommands.ClearCountryCode()).value
@@ -518,10 +511,15 @@ object HotspotController {
                 server.execute(WifiCountryCodeCommands.SetCountryCode(normalized)).value
             }
         }
-        if (ok) {
-            WifiCountryCodeCommands.appliedCountryCode = normalized
+        if (!ok) {
+            throw IOException(
+                if (normalized == null) "Android could not clear the Wi-Fi country code override"
+                else "Android could not set the Wi-Fi country code to $normalized",
+            )
         }
-        return refreshCountryCode() ?: normalized
+        WifiCountryCodeCommands.appliedCountryCode = normalized
+        refreshCountryCode()
+        return normalized
     }
 
     suspend fun cleanRouting() {
