@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/common/service_probe.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/plugins/hotspot.dart';
@@ -51,7 +50,7 @@ class _FakeHotspotHost implements HotspotHost {
   final bool supported;
   HotspotSnapshot snapshot;
   final calls = <String>[];
-  Object? nextError;
+  Exception? nextError;
   final _stateController = StreamController<HotspotSnapshot>.broadcast();
   final _autoMatchController = StreamController<bool>.broadcast();
 
