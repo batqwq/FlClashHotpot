@@ -414,9 +414,9 @@ class AndroidHotspotHost implements HotspotHost {
 
   @override
   Stream<bool> watchAutoMatchCountryCode() {
-    return _autoMatchEventChannel
-        .receiveBroadcastStream()
-        .map((event) => event == true);
+    return _autoMatchEventChannel.receiveBroadcastStream().map(
+      (event) => event == true,
+    );
   }
 
   @override
@@ -437,18 +437,16 @@ class AndroidHotspotHost implements HotspotHost {
 
   @override
   Future<void> setRepeaterEnabled(bool enabled) {
-    return _methodChannel.invokeMethod<void>(
-      'setRepeaterEnabled',
-      {'enabled': enabled},
-    );
+    return _methodChannel.invokeMethod<void>('setRepeaterEnabled', {
+      'enabled': enabled,
+    });
   }
 
   @override
   Future<void> setLocalOnlyHotspotEnabled(bool enabled) {
-    return _methodChannel.invokeMethod<void>(
-      'setLocalOnlyHotspotEnabled',
-      {'enabled': enabled},
-    );
+    return _methodChannel.invokeMethod<void>('setLocalOnlyHotspotEnabled', {
+      'enabled': enabled,
+    });
   }
 
   @override
@@ -462,51 +460,45 @@ class AndroidHotspotHost implements HotspotHost {
 
   @override
   Future<void> setMasqueradeMode(HotspotMasqueradeMode mode) {
-    return _methodChannel.invokeMethod<void>(
-      'setMasqueradeMode',
-      {'mode': mode.name},
-    );
+    return _methodChannel.invokeMethod<void>('setMasqueradeMode', {
+      'mode': mode.name,
+    });
   }
 
   @override
   Future<void> setIpv6Mode(HotspotIpv6Mode mode) {
-    return _methodChannel.invokeMethod<void>(
-      'setIpv6Mode',
-      {'mode': mode.name},
-    );
+    return _methodChannel.invokeMethod<void>('setIpv6Mode', {
+      'mode': mode.name,
+    });
   }
 
   @override
   Future<void> setTetherOffloadEnabled(bool enabled) {
-    return _methodChannel.invokeMethod<void>(
-      'setTetherOffloadEnabled',
-      {'enabled': enabled},
-    );
+    return _methodChannel.invokeMethod<void>('setTetherOffloadEnabled', {
+      'enabled': enabled,
+    });
   }
 
   @override
   Future<void> setAutoStartEnabled(bool enabled) {
-    return _methodChannel.invokeMethod<void>(
-      'setAutoStartEnabled',
-      {'enabled': enabled},
-    );
+    return _methodChannel.invokeMethod<void>('setAutoStartEnabled', {
+      'enabled': enabled,
+    });
   }
 
   @override
   Future<void> setAutoMatchCountryCode(bool enabled) {
-    return _methodChannel.invokeMethod<void>(
-      'setAutoMatchCountryCode',
-      {'enabled': enabled},
-    );
+    return _methodChannel.invokeMethod<void>('setAutoMatchCountryCode', {
+      'enabled': enabled,
+    });
   }
 
   @override
   Future<String?> setCountryCode(String? countryCode) async {
     final normalized = normalizeHotspotCountryCode(countryCode);
-    final result = await _methodChannel.invokeMethod<String>(
-      'setCountryCode',
-      {'countryCode': normalized},
-    );
+    final result = await _methodChannel.invokeMethod<String>('setCountryCode', {
+      'countryCode': normalized,
+    });
     return normalizeHotspotCountryCode(result);
   }
 

@@ -3766,7 +3766,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hotspotAutoMatchCountryCode => '自动匹配出口 IP 国家代码';
 
   @override
-  String get hotspotAutoMatchCountryCodeDesc => '自动将 Wi-Fi 热点国家代码同步为当前出口 IP 所在国家/地区';
+  String get hotspotAutoMatchCountryCodeDesc =>
+      '自动将 Wi-Fi 热点国家代码同步为当前出口 IP 所在国家/地区';
 
   @override
   String get hotspotCurrentCountryCode => '当前 Wi-Fi 国家代码';

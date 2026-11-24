@@ -335,10 +335,8 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
               title: Text(l.hotspotEthernetTethering),
               value: snapshot.ethernetTetheringActive,
               onChanged: (value) => _runAction(
-                () => hotspotManager.setSystemTetheringEnabled(
-                  'ethernet',
-                  value,
-                ),
+                () =>
+                    hotspotManager.setSystemTetheringEnabled('ethernet', value),
               ),
             ),
           if (snapshot.repeaterSupported)

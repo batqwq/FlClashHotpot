@@ -3791,7 +3791,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hotspotOpenNative => '高度な VPNHotspot';
 
   @override
-  String get hotspotOpenNativeDesc => 'SoftAP 設定、リピーター Wi-Fi、QR コード、静的 IP、クライアント管理';
+  String get hotspotOpenNativeDesc =>
+      'SoftAP 設定、リピーター Wi-Fi、QR コード、静的 IP、クライアント管理';
 
   @override
   String get hotspotUpstream => 'アップストリーム';
@@ -3815,7 +3816,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hotspotAutoMatchCountryCode => '出口 IP の国コードに自動一致';
 
   @override
-  String get hotspotAutoMatchCountryCodeDesc => 'Wi-Fi ホットスポットの国コードを現在の出口 IP の国に自動同期します';
+  String get hotspotAutoMatchCountryCodeDesc =>
+      'Wi-Fi ホットスポットの国コードを現在の出口 IP の国に自動同期します';
 
   @override
   String get hotspotCurrentCountryCode => '現在の Wi-Fi 国コード';

@@ -4012,13 +4012,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get vpnHotspot => 'Point d\'accès VPN';
 
   @override
-  String get vpnHotspotDesc => 'Partager le VPN par point d\'accès, répéteur ou partage (root requis)';
+  String get vpnHotspotDesc =>
+      'Partager le VPN par point d\'accès, répéteur ou partage (root requis)';
 
   @override
   String get hotspotOpenNative => 'VPNHotspot avancé';
 
   @override
-  String get hotspotOpenNativeDesc => 'Configuration SoftAP, répéteur Wi-Fi, QR code, IP statique et clients';
+  String get hotspotOpenNativeDesc =>
+      'Configuration SoftAP, répéteur Wi-Fi, QR code, IP statique et clients';
 
   @override
   String get hotspotUpstream => 'Réseau amont';
@@ -4039,10 +4041,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get hotspotCountryCode => 'Code pays du point d\'accès';
 
   @override
-  String get hotspotAutoMatchCountryCode => 'Adapter au pays de l\'IP de sortie';
+  String get hotspotAutoMatchCountryCode =>
+      'Adapter au pays de l\'IP de sortie';
 
   @override
-  String get hotspotAutoMatchCountryCodeDesc => 'Synchroniser automatiquement le code pays Wi-Fi avec l\'IP de sortie active';
+  String get hotspotAutoMatchCountryCodeDesc =>
+      'Synchroniser automatiquement le code pays Wi-Fi avec l\'IP de sortie active';
 
   @override
   String get hotspotCurrentCountryCode => 'Code pays Wi-Fi actuel';
@@ -4120,7 +4124,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get hotspotTetherOffload => 'Accélération matérielle du partage';
 
   @override
-  String get hotspotTetherOffloadDesc => 'Désactivez si les appareils connectés contournent le VPN';
+  String get hotspotTetherOffloadDesc =>
+      'Désactivez si les appareils connectés contournent le VPN';
 
   @override
   String get hotspotAutoStart => 'Démarrer au démarrage';
@@ -4129,13 +4134,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get hotspotCleanRouting => 'Nettoyer les règles de routage';
 
   @override
-  String get hotspotCleanRoutingDesc => 'Supprimer les règles obsolètes et réappliquer les routes actives';
+  String get hotspotCleanRoutingDesc =>
+      'Supprimer les règles obsolètes et réappliquer les routes actives';
 
   @override
   String get hotspotSystemSettings => 'Paramètres système de partage';
 
   @override
-  String get hotspotAndroidOnly => 'Le point d\'accès VPN est disponible uniquement sur Android 10+';
+  String get hotspotAndroidOnly =>
+      'Le point d\'accès VPN est disponible uniquement sur Android 10+';
 
   @override
   String hotspotCountryCodeUpdated(Object code) {
@@ -4143,7 +4150,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get hotspotCountryCodeReset => 'Code pays Wi-Fi réinitialisé par défaut';
+  String get hotspotCountryCodeReset =>
+      'Code pays Wi-Fi réinitialisé par défaut';
 
   @override
   String get hotspotCleaned => 'Règles de routage nettoyées';

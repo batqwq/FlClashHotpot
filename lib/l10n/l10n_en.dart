@@ -3965,13 +3965,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vpnHotspot => 'VPN Hotspot';
 
   @override
-  String get vpnHotspotDesc => 'Share VPN over hotspot, repeater, or tethering (root required)';
+  String get vpnHotspotDesc =>
+      'Share VPN over hotspot, repeater, or tethering (root required)';
 
   @override
   String get hotspotOpenNative => 'Advanced VPNHotspot';
 
   @override
-  String get hotspotOpenNativeDesc => 'SoftAP config, repeater Wi-Fi, QR code, static IP, and clients';
+  String get hotspotOpenNativeDesc =>
+      'SoftAP config, repeater Wi-Fi, QR code, static IP, and clients';
 
   @override
   String get hotspotUpstream => 'Upstream';
@@ -3995,7 +3997,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hotspotAutoMatchCountryCode => 'Auto-match exit IP country code';
 
   @override
-  String get hotspotAutoMatchCountryCodeDesc => 'Automatically set the Wi-Fi hotspot country code to match the active exit IP';
+  String get hotspotAutoMatchCountryCodeDesc =>
+      'Automatically set the Wi-Fi hotspot country code to match the active exit IP';
 
   @override
   String get hotspotCurrentCountryCode => 'Current Wi-Fi country code';
@@ -4073,7 +4076,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hotspotTetherOffload => 'Tethering hardware acceleration';
 
   @override
-  String get hotspotTetherOffloadDesc => 'Disable if tethered devices bypass the VPN';
+  String get hotspotTetherOffloadDesc =>
+      'Disable if tethered devices bypass the VPN';
 
   @override
   String get hotspotAutoStart => 'Start on boot';
@@ -4082,13 +4086,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hotspotCleanRouting => 'Clean routing rules';
 
   @override
-  String get hotspotCleanRoutingDesc => 'Clear stale rules and reapply active tethering routes';
+  String get hotspotCleanRoutingDesc =>
+      'Clear stale rules and reapply active tethering routes';
 
   @override
   String get hotspotSystemSettings => 'System tethering settings';
 
   @override
-  String get hotspotAndroidOnly => 'VPN Hotspot is only available on Android 10+';
+  String get hotspotAndroidOnly =>
+      'VPN Hotspot is only available on Android 10+';
 
   @override
   String hotspotCountryCodeUpdated(Object code) {
@@ -4096,7 +4102,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get hotspotCountryCodeReset => 'Wi-Fi country code reset to system default';
+  String get hotspotCountryCodeReset =>
+      'Wi-Fi country code reset to system default';
 
   @override
   String get hotspotCleaned => 'Routing rules cleaned';

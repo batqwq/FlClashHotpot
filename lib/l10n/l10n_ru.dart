@@ -3959,13 +3959,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get vpnHotspot => 'VPN-точка доступа';
 
   @override
-  String get vpnHotspotDesc => 'Раздача VPN через точку доступа, репитер или модем (нужен root)';
+  String get vpnHotspotDesc =>
+      'Раздача VPN через точку доступа, репитер или модем (нужен root)';
 
   @override
   String get hotspotOpenNative => 'Расширенный VPNHotspot';
 
   @override
-  String get hotspotOpenNativeDesc => 'Настройка SoftAP, репитера Wi-Fi, QR-код, статический IP и клиенты';
+  String get hotspotOpenNativeDesc =>
+      'Настройка SoftAP, репитера Wi-Fi, QR-код, статический IP и клиенты';
 
   @override
   String get hotspotUpstream => 'Исходящая сеть';
@@ -3989,7 +3991,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hotspotAutoMatchCountryCode => 'Автокод страны по выходному IP';
 
   @override
-  String get hotspotAutoMatchCountryCodeDesc => 'Автоматически синхронизировать код страны Wi-Fi с текущим выходным IP';
+  String get hotspotAutoMatchCountryCodeDesc =>
+      'Автоматически синхронизировать код страны Wi-Fi с текущим выходным IP';
 
   @override
   String get hotspotCurrentCountryCode => 'Текущий код страны Wi-Fi';
@@ -4067,7 +4070,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hotspotTetherOffload => 'Аппаратное ускорение модема';
 
   @override
-  String get hotspotTetherOffloadDesc => 'Отключите, если устройства идут в обход VPN';
+  String get hotspotTetherOffloadDesc =>
+      'Отключите, если устройства идут в обход VPN';
 
   @override
   String get hotspotAutoStart => 'Запуск при загрузке';
@@ -4076,13 +4080,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hotspotCleanRouting => 'Очистить правила маршрутизации';
 
   @override
-  String get hotspotCleanRoutingDesc => 'Удалить устаревшие правила и переприменить маршруты';
+  String get hotspotCleanRoutingDesc =>
+      'Удалить устаревшие правила и переприменить маршруты';
 
   @override
   String get hotspotSystemSettings => 'Системные настройки модема';
 
   @override
-  String get hotspotAndroidOnly => 'VPN-точка доступа доступна только на Android 10+';
+  String get hotspotAndroidOnly =>
+      'VPN-точка доступа доступна только на Android 10+';
 
   @override
   String hotspotCountryCodeUpdated(Object code) {

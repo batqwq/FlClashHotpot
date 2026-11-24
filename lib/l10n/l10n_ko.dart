@@ -3866,7 +3866,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hotspotOpenNative => '고급 VPNHotspot';
 
   @override
-  String get hotspotOpenNativeDesc => 'SoftAP 설정, Wi-Fi 중계기, QR 코드, 고정 IP 및 클라이언트 관리';
+  String get hotspotOpenNativeDesc =>
+      'SoftAP 설정, Wi-Fi 중계기, QR 코드, 고정 IP 및 클라이언트 관리';
 
   @override
   String get hotspotUpstream => '업스트림';
@@ -3890,7 +3891,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hotspotAutoMatchCountryCode => '출구 IP 국가 코드 자동 일치';
 
   @override
-  String get hotspotAutoMatchCountryCodeDesc => 'Wi-Fi 핫스팟 국가 코드를 현재 출구 IP의 국가와 자동으로 동기화합니다';
+  String get hotspotAutoMatchCountryCodeDesc =>
+      'Wi-Fi 핫스팟 국가 코드를 현재 출구 IP의 국가와 자동으로 동기화합니다';
 
   @override
   String get hotspotCurrentCountryCode => '현재 Wi-Fi 국가 코드';
