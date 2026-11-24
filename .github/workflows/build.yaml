@@ -60,7 +60,12 @@ jobs:
         run: flutter pub get
 
       - name: Check format
-        run: dart format --output=none --set-exit-if-changed lib test tool plugins
+        run: |
+          if ! dart format --output=none --set-exit-if-changed lib test tool plugins; then
+            dart format lib test tool plugins
+            git diff
+            exit 1
+          fi
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -359,6 +364,10 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Pre-download Go modules
+        working-directory: core
+        run: go mod download
 
       - name: Build Android arm64 APK
         env:
