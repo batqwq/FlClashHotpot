@@ -2,7 +2,6 @@ package be.mygod.vpnhotspot
 
 import android.app.*
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import androidx.core.content.getSystemService
@@ -30,9 +29,10 @@ object ServiceNotification {
             setColor(context.resources.getColor(R.color.vpnhotspot_colorPrimary, context.theme))
             setContentTitle(context.getText(R.string.notification_tethering_title))
             setSmallIcon(R.drawable.ic_quick_settings_tile_on)
-            setContentIntent(PendingIntent.getActivity(context, 0,
-                Intent(context, MainActivity::class.java).setPackage(context.packageName),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
+            context.packageManager.getLaunchIntentForPackage(context.packageName)?.let { intent ->
+                setContentIntent(PendingIntent.getActivity(context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
+            }
             setVisibility(Notification.VISIBILITY_PUBLIC)
         }
         var lines = deviceCounts.map { (dev, size) ->

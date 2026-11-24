@@ -269,12 +269,6 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
             title: Text(l.hotspotFallbackUpstream),
             subtitle: Text(fallbackLabel),
           ),
-          ListItem(
-            leading: const GlyphIcon(AppGlyphs.openExternal),
-            title: Text(l.hotspotOpenNative),
-            subtitle: Text(l.hotspotOpenNativeDesc),
-            onTap: () => _runAction(hotspotManager.openNativeUi),
-          ),
         ],
       ),
       generateSection(
@@ -359,37 +353,44 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
           ),
         ],
       ),
-      if (snapshot.interfaces.isNotEmpty)
-        generateSection(
-          title: l.hotspotInterfaces,
-          items: [
-            for (final iface in snapshot.interfaces) ...[
-              ListItem.toggle(
-                leading: GlyphIcon(
-                  iface.type == 'wifi' || iface.type == 'wifi_p2p'
-                      ? AppGlyphs.wifi
-                      : AppGlyphs.connections,
-                ),
-                title: Text(iface.name),
-                subtitle: iface.addresses.isEmpty
-                    ? null
-                    : Text(iface.addresses.join(', ')),
-                value: iface.managed,
-                onChanged: iface.inactive
-                    ? null
-                    : (value) => _toggleInterfaceManaged(iface.name, value),
+      generateSection(
+        title: l.hotspotInterfaces,
+        items: [
+          ListItem.toggle(
+            leading: const GlyphIcon(AppGlyphs.connections),
+            title: Text(l.selectAll),
+            subtitle: Text(l.hotspotWatchReconnect),
+            value: snapshot.alwaysShareAll,
+            onChanged: (value) =>
+                _runAction(() => hotspotManager.setAlwaysShareAll(value)),
+          ),
+          for (final iface in snapshot.interfaces) ...[
+            ListItem.toggle(
+              leading: GlyphIcon(
+                iface.type == 'wifi' || iface.type == 'wifi_p2p'
+                    ? AppGlyphs.wifi
+                    : AppGlyphs.connections,
               ),
-              if (iface.managed || iface.monitored)
-                ListItem.toggle(
-                  title: Text(l.hotspotWatchReconnect),
-                  subtitle: Text(iface.name),
-                  value: iface.monitored,
-                  onChanged: (value) =>
-                      _toggleInterfaceMonitored(iface.name, value),
-                ),
-            ],
+              title: Text(iface.name),
+              subtitle: iface.addresses.isEmpty
+                  ? null
+                  : Text(iface.addresses.join(', ')),
+              value: iface.managed,
+              onChanged:
+                  iface.inactive || iface.monitored || snapshot.alwaysShareAll
+                  ? null
+                  : (value) => _toggleInterfaceManaged(iface.name, value),
+            ),
+            ListItem.toggle(
+              title: Text(l.hotspotWatchReconnect),
+              subtitle: Text(iface.name),
+              value: iface.monitored,
+              onChanged: (value) =>
+                  _toggleInterfaceMonitored(iface.name, value),
+            ),
           ],
-        ),
+        ],
+      ),
       generateSection(
         title: l.hotspotClients,
         items: snapshot.clients.isEmpty
@@ -492,18 +493,12 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
       title: l.vpnHotspot,
       isLoading: _busy,
       iconActions: [
-        if (supported) ...[
+        if (supported)
           IconButtonData(
             glyph: AppGlyphs.refresh,
             tooltip: l.sync,
             onPressed: _refresh,
           ),
-          IconButtonData(
-            glyph: AppGlyphs.openExternal,
-            tooltip: l.hotspotOpenNative,
-            onPressed: () => _runAction(hotspotManager.openNativeUi),
-          ),
-        ],
       ],
       body: Builder(
         builder: (context) {

@@ -97,8 +97,8 @@ class _FakeHotspotHost implements HotspotHost {
   }
 
   @override
-  Future<void> openNativeUi() async {
-    calls.add('openNativeUi');
+  Future<void> setAlwaysShareAll(bool enabled) async {
+    calls.add('setAlwaysShareAll:$enabled');
   }
 
   @override
@@ -221,6 +221,7 @@ void main() {
             'getState' => <Object?, Object?>{
               'supported': true,
               'vpnUpstream': 'tun0',
+              'alwaysShareAll': true,
             },
             'setSystemTetheringEnabled' => true,
             'setCountryCode' => 'US',
@@ -231,6 +232,7 @@ void main() {
     expect(host.isSupported, isTrue);
     final state = await host.getState();
     expect(state.vpnUpstream, 'tun0');
+    expect(state.alwaysShareAll, isTrue);
     await host.setInterfaceManaged('wlan2', true);
     await host.setInterfaceMonitored('wlan2', true);
     await host.setRepeaterEnabled(true);
@@ -243,7 +245,7 @@ void main() {
     await host.setAutoMatchCountryCode(true);
     expect(await host.setCountryCode('us'), 'US');
     await host.cleanRouting();
-    await host.openNativeUi();
+    await host.setAlwaysShareAll(true);
     await host.openSystemTetheringSettings();
 
     expect(recorded.map((c) => c.method), [
@@ -260,9 +262,10 @@ void main() {
       'setAutoMatchCountryCode',
       'setCountryCode',
       'cleanRouting',
-      'openNativeUi',
+      'setAlwaysShareAll',
       'openSystemTetheringSettings',
     ]);
+    expect(recorded[recorded.length - 2].arguments, {'enabled': true});
   });
 
   test('AndroidHotspotHost streams state and auto-match updates', () async {
@@ -316,7 +319,7 @@ void main() {
     await hotspotManager.setAutoMatchCountryCode(true);
     expect(await hotspotManager.setCountryCode('jp'), 'JP');
     await hotspotManager.cleanRouting();
-    await hotspotManager.openNativeUi();
+    await hotspotManager.setAlwaysShareAll(false);
     await hotspotManager.openSystemTetheringSettings();
 
     expect(fake.calls, [
@@ -333,7 +336,7 @@ void main() {
       'setAutoMatchCountryCode:true',
       'setCountryCode:jp',
       'cleanRouting',
-      'openNativeUi',
+      'setAlwaysShareAll:false',
       'openSystemTetheringSettings',
     ]);
   });

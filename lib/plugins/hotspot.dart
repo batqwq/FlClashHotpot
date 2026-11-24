@@ -170,6 +170,7 @@ class HotspotSnapshot {
     this.ipv6Mode = HotspotIpv6Mode.block,
     this.tetherOffloadEnabled = false,
     this.autoStart = false,
+    this.alwaysShareAll = false,
     this.autoMatchCountryCode = false,
     this.currentCountryCode,
     this.appliedCountryCode,
@@ -216,6 +217,7 @@ class HotspotSnapshot {
       ipv6Mode: HotspotIpv6Mode.fromWire(map['ipv6Mode'] as String?),
       tetherOffloadEnabled: map['tetherOffloadEnabled'] == true,
       autoStart: map['autoStart'] == true,
+      alwaysShareAll: map['alwaysShareAll'] == true,
       autoMatchCountryCode: map['autoMatchCountryCode'] == true,
       currentCountryCode: normalizeHotspotCountryCode(
         map['currentCountryCode'] as String?,
@@ -249,6 +251,7 @@ class HotspotSnapshot {
   final HotspotIpv6Mode ipv6Mode;
   final bool tetherOffloadEnabled;
   final bool autoStart;
+  final bool alwaysShareAll;
   final bool autoMatchCountryCode;
   final String? currentCountryCode;
   final String? appliedCountryCode;
@@ -371,7 +374,7 @@ abstract interface class HotspotHost {
 
   Future<void> cleanRouting();
 
-  Future<void> openNativeUi();
+  Future<void> setAlwaysShareAll(bool enabled);
 
   Future<void> openSystemTetheringSettings();
 }
@@ -508,8 +511,10 @@ class AndroidHotspotHost implements HotspotHost {
   }
 
   @override
-  Future<void> openNativeUi() {
-    return _methodChannel.invokeMethod<void>('openNativeUi');
+  Future<void> setAlwaysShareAll(bool enabled) {
+    return _methodChannel.invokeMethod<void>('setAlwaysShareAll', {
+      'enabled': enabled,
+    });
   }
 
   @override
@@ -571,7 +576,7 @@ class _UnsupportedHotspotHost implements HotspotHost {
   Future<void> cleanRouting() async {}
 
   @override
-  Future<void> openNativeUi() async {}
+  Future<void> setAlwaysShareAll(bool enabled) async {}
 
   @override
   Future<void> openSystemTetheringSettings() async {}
@@ -633,7 +638,8 @@ class HotspotManager {
 
   Future<void> cleanRouting() => _host.cleanRouting();
 
-  Future<void> openNativeUi() => _host.openNativeUi();
+  Future<void> setAlwaysShareAll(bool enabled) =>
+      _host.setAlwaysShareAll(enabled);
 
   Future<void> openSystemTetheringSettings() =>
       _host.openSystemTetheringSettings();

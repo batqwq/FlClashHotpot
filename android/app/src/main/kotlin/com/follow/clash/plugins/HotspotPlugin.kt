@@ -251,8 +251,10 @@ class HotspotPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAw
                 null
             }
 
-            "openNativeUi" -> runSyncResult(result) {
-                HotspotController.openNativeUi(activeContext())
+            "setAlwaysShareAll" -> {
+                val enabled = call.argument<Boolean>("enabled")
+                    ?: return result.error(ERROR_ARGUMENT, "Missing enabled", null)
+                runSyncResult(result) { HotspotController.setAlwaysShareAll(activeContext(), enabled) }
             }
 
             "openSystemTetheringSettings" -> runSyncResult(result) {

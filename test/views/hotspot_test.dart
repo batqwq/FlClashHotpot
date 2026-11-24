@@ -163,9 +163,9 @@ class _FakeHotspotHost implements HotspotHost {
   }
 
   @override
-  Future<void> openNativeUi() async {
+  Future<void> setAlwaysShareAll(bool enabled) async {
     _throwIfNeeded();
-    calls.add('openNativeUi');
+    calls.add('alwaysShareAll:$enabled');
   }
 
   @override
@@ -254,7 +254,7 @@ void main() {
           name: 'wlan2',
           type: 'wifi',
           managed: true,
-          monitored: true,
+          monitored: false,
           inactive: false,
           addresses: ['192.168.43.1/24'],
         ),
@@ -279,9 +279,7 @@ void main() {
     expect(find.text('US'), findsOneWidget);
     expect(find.text('Exit IP country code: JP'), findsOneWidget);
 
-    await tester.tap(find.text('Advanced VPNHotspot'));
-    await tester.pumpAndSettle();
-    expect(host.calls, contains('openNativeUi'));
+    expect(find.text('Advanced VPNHotspot'), findsNothing);
 
     await tester.tap(find.text('Auto-match exit IP country code'));
     await tester.pumpAndSettle();
@@ -301,7 +299,21 @@ void main() {
     expect(find.text('MacBook'), findsOneWidget);
     expect(find.text('Blocked'), findsOneWidget);
 
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -700));
+    final allInterfaces = find.text('Select all');
+    await tester.ensureVisible(allInterfaces);
+    await tester.pumpAndSettle();
+    await tester.tap(allInterfaces);
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('alwaysShareAll:true'));
+
+    final reconnect = find.text('Auto-enable on reconnect').last;
+    await tester.ensureVisible(reconnect);
+    await tester.pumpAndSettle();
+    await tester.tap(reconnect);
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('monitored:wlan2:true'));
+
+    await tester.scrollUntilVisible(find.text('Clean routing rules'), 500);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Clean routing rules'));

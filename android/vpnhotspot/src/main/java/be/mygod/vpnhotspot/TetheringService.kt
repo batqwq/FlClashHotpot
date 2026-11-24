@@ -8,12 +8,15 @@ import androidx.collection.MutableScatterSet
 import androidx.collection.ScatterSet
 import androidx.collection.emptyScatterSet
 import androidx.collection.toMutableScatterMap
+import androidx.core.content.edit
+import be.mygod.vpnhotspot.App.Companion.app
 import be.mygod.vpnhotspot.net.Routing
 import be.mygod.vpnhotspot.net.TetherStates
 import be.mygod.vpnhotspot.net.TetheringManagerCompat
 import be.mygod.vpnhotspot.root.WifiApCommands
 import be.mygod.vpnhotspot.util.TileServiceDismissHandle
 import be.mygod.vpnhotspot.widget.SmartSnackbar
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -33,9 +36,12 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
     companion object {
         const val EXTRA_ADD_INTERFACES = "interface.add"
         const val EXTRA_ADD_INTERFACE_MONITOR = "interface.add.monitor"
-        const val EXTRA_ADD_INTERFACES_MONITOR = "interface.adds.monitor"
         const val EXTRA_REMOVE_INTERFACE = "interface.remove"
         const val EXTRA_REMOVE_INTERFACE_MONITOR = "interface.remove.monitor"
+        const val EXTRA_ALWAYS_SHARE_ALL = "interface.alwaysShareAll"
+        private const val KEY_ALWAYS_SHARE_ALL = "service.hotspot.alwaysShareAll"
+
+        val alwaysShareAll get() = app.pref.getBoolean(KEY_ALWAYS_SHARE_ALL, false)
 
         var dismissHandle: TileServiceDismissHandle? = null
         private fun dismissIfApplicable() = dismissHandle?.run {
@@ -52,7 +58,7 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
         fun isActive(iface: String) = managedIfaces.value.contains(iface)
     }
 
-    private class Downstream(caller: Any, downstream: String, var monitor: Boolean = false) :
+    private class Downstream(caller: Any, downstream: String, var manual: Boolean = false, var monitor: Boolean = false) :
             RoutingManager(caller, downstream) {
         override fun Routing.configure() {
             ipv6Mode = RoutingManager.ipv6Mode
@@ -62,9 +68,7 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
     @Parcelize
     data class Starter(val monitored: ArrayList<String>) : BootReceiver.Startable {
         override fun start(context: Context) {
-            context.startForegroundService(Intent(context, TetheringService::class.java).apply {
-                putStringArrayListExtra(EXTRA_ADD_INTERFACES_MONITOR, monitored)
-            })
+            context.startForegroundService(Intent(context, TetheringService::class.java))
         }
     }
 
@@ -81,6 +85,8 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
     private val downstreamsMutex = Mutex()
     private var tetherStatesJob: Job? = null
     private var tetheredIfaces: Set<String>? = null
+    private var restored = false
+    private var handledStartId = 0
 
     private fun launchTetherStatesJob() = launch {
         if (Build.VERSION.SDK_INT >= 30) launch {
@@ -101,19 +107,28 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
         TetherStates.flow.map { it.tethered }.distinctUntilChanged().collect { tetheredInterfaces ->
             downstreamsMutex.withLock {
                 tetheredIfaces = tetheredInterfaces
-                val toRemove = downstreams.toMutableScatterMap()
-                tetheredInterfaces.forEach { iface ->
-                    val downstream = toRemove.remove(iface)
-                    if (downstream != null && downstream.monitor && !downstream.start()) dismissIfApplicable()
-                }
-                toRemove.forEach { iface, downstream ->
-                    if (!downstream.monitor) check(downstreams.remove(iface, downstream))
-                    downstream.stop()
-                }
+                reconcileDownstreamsLocked()
                 onDownstreamsChangedLocked()
             }
         }
     }
+
+    private suspend fun reconcileDownstreamsLocked() {
+        val tethered = tetheredIfaces ?: return
+        val all = alwaysShareAll
+        if (all) for (iface in tethered) {
+            downstreams.compute(iface) { _, current -> current ?: Downstream(this, iface) }
+        }
+        downstreams.toMutableScatterMap().forEach { iface, downstream ->
+            if (iface in tethered && (all || downstream.manual || downstream.monitor)) {
+                if (!downstream.started && !downstream.start()) dismissIfApplicable()
+            } else {
+                if (!downstream.monitor) check(downstreams.remove(iface, downstream))
+                downstream.stop()
+            }
+        }
+    }
+
     private suspend fun onDownstreamsChangedLocked() {
         val monitoredIfaces = MutableScatterSet<String>()
         val inactiveIfaces = MutableScatterSet<String>()
@@ -129,7 +144,7 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
             }
         }
         monitoredIfaces.also { ifaces ->
-            if (ifaces.isEmpty()) {
+            if (ifaces.isEmpty() && !alwaysShareAll) {
                 BootReceiver.delete<TetheringService>()
             } else BootReceiver.add<TetheringService>(Starter(ArrayList<String>(ifaces.size).apply {
                 ifaces.forEach { iface -> add(iface) }
@@ -143,11 +158,12 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
             inactiveIfaceSet.value = inactiveIfaces
             this@TetheringService.managedIfaces.value = managedIfaces
         }
-        if (managedIfaces.isEmpty()) {
-            interfaces.value = null
-            unregisterReceiver()
-            ServiceNotification.stopForeground(this)
-            stopSelf()
+        if (managedIfaces.isEmpty() && !alwaysShareAll) {
+            if (stopSelfResult(handledStartId)) {
+                interfaces.value = null
+                ServiceNotification.stopForeground(this)
+                unregisterReceiver()
+            }
         } else {
             if (tetherStatesJob == null) tetherStatesJob = launchTetherStatesJob()
             interfaces.value = Interfaces(active, notificationInactive)
@@ -159,51 +175,49 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         launch { BootReceiver.startIfEnabled() }
         ServiceNotification.startForeground(this)   // call this first just in case we are shutting down immediately
-        launch {
+        launch(start = CoroutineStart.UNDISPATCHED) {
             downstreamsMutex.withLock {
-                if (intent != null) {
-                    for (iface in intent.getStringArrayExtra(EXTRA_ADD_INTERFACES) ?: emptyArray()) {
-                        var newDownstream: Downstream? = null
-                        downstreams.compute(iface) { _, existing ->
-                            existing ?: Downstream(this@TetheringService, iface).also { newDownstream = it }
-                        }
-                        if (newDownstream?.start() == false) dismissIfApplicable()
-                    }
-                    val monitorList = intent.getStringArrayListExtra(EXTRA_ADD_INTERFACES_MONITOR) ?:
-                        intent.getStringExtra(EXTRA_ADD_INTERFACE_MONITOR)?.let { listOf(it) }
-                    if (!monitorList.isNullOrEmpty()) for (iface in monitorList) {
-                        val isTethered = tetheredIfaces?.contains(iface) == true
-                        var downstreamToStart: Downstream? = null
-                        downstreams.compute(iface) { _, downstream ->
-                            if (downstream == null) {
-                                Downstream(this@TetheringService, iface, true).also {
-                                    if (isTethered) downstreamToStart = it
-                                }
-                            } else {
-                                downstream.monitor = true
-                                if (isTethered && !downstream.started) downstreamToStart = downstream
-                                downstream
-                            }
-                        }
-                        if (downstreamToStart?.start() == false) dismissIfApplicable()
-                    }
-                    intent.getStringExtra(EXTRA_REMOVE_INTERFACE)?.also { downstreams.remove(it)?.stop() }
-                    intent.getStringExtra(EXTRA_REMOVE_INTERFACE_MONITOR)?.also { iface ->
-                        downstreams[iface]?.also { downstream ->
-                            downstream.monitor = false
-                            if (!downstream.started) downstreams.remove(iface)?.stop()
-                        }
-                    }
-                    onDownstreamsChangedLocked()
-                } else if (downstreams.isEmpty()) withContext(Dispatchers.Main) {
-                    if (stopSelfResult(startId)) {
-                        interfaces.value = null
-                        ServiceNotification.stopForeground(this@TetheringService)
-                    }
+                withContext(Dispatchers.Default) {
+                    applyCommandLocked(intent, startId)
                 }
             }
         }
-        return START_NOT_STICKY
+        return START_STICKY
+    }
+
+    private suspend fun applyCommandLocked(intent: Intent?, startId: Int) {
+        handledStartId = startId
+        if (!restored) {
+            BootReceiver.tetheringConfig()?.monitored?.forEach { iface ->
+                downstreams[iface] = Downstream(this, iface, monitor = true)
+            }
+            restored = true
+        }
+        if (intent != null) {
+            if (intent.hasExtra(EXTRA_ALWAYS_SHARE_ALL)) app.pref.edit {
+                putBoolean(KEY_ALWAYS_SHARE_ALL, intent.getBooleanExtra(EXTRA_ALWAYS_SHARE_ALL, false))
+            }
+            for (iface in intent.getStringArrayExtra(EXTRA_ADD_INTERFACES) ?: emptyArray()) {
+                val downstream = downstreams.compute(iface) { _, current ->
+                    (current ?: Downstream(this, iface)).apply { manual = true }
+                }
+                if (!downstream.started && !downstream.start()) dismissIfApplicable()
+            }
+            intent.getStringExtra(EXTRA_ADD_INTERFACE_MONITOR)?.also { iface ->
+                downstreams.compute(iface) { _, current ->
+                    (current ?: Downstream(this, iface)).apply { monitor = true }
+                }
+            }
+            intent.getStringExtra(EXTRA_REMOVE_INTERFACE)?.also { downstreams.remove(it)?.stop() }
+            intent.getStringExtra(EXTRA_REMOVE_INTERFACE_MONITOR)?.also { iface ->
+                downstreams[iface]?.let { downstream ->
+                    downstream.monitor = false
+                    if (!downstream.manual && !alwaysShareAll) downstreams.remove(iface)?.stop()
+                }
+            }
+        }
+        reconcileDownstreamsLocked()
+        onDownstreamsChangedLocked()
     }
 
     override fun onDestroy() {

@@ -39,13 +39,6 @@
 
     <application>
         <activity
-            android:name="be.mygod.vpnhotspot.MainActivity"
-            android:exported="false"
-            android:label="@string/vpnhotspot_app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/VpnHotspotTheme" />
-
-        <activity
             android:name="be.mygod.vpnhotspot.util.SelfDismissActivity"
             android:excludeFromRecents="true"
             android:taskAffinity=""

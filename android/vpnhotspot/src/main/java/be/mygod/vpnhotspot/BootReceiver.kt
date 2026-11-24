@@ -96,6 +96,10 @@ class BootReceiver : BroadcastReceiver() {
         suspend inline fun <reified T> add(value: Startable) = add(T::class.java.name, value)
         suspend inline fun <reified T> delete() = delete(T::class.java.name)
 
+        internal suspend fun tetheringConfig() = configMutex.withLock {
+            loadConfigLocked()?.startables?.get(TetheringService::class.java.name) as? TetheringService.Starter
+        }
+
         private var started = false
         private suspend fun startIfNecessary() = configMutex.withLock {
             if (started) return@withLock

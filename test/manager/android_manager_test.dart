@@ -127,7 +127,7 @@ class _FakeCountryHotspotHost implements HotspotHost {
   Future<void> cleanRouting() async {}
 
   @override
-  Future<void> openNativeUi() async {}
+  Future<void> setAlwaysShareAll(bool enabled) async {}
 
   @override
   Future<void> openSystemTetheringSettings() async {}

@@ -75,6 +75,11 @@ FlClash starts the core only after the disclaimer is accepted. Where nobody can 
 ## Usage
 
 **Share the VPN on Android.** On a rooted Android 10 or newer device, start FlClash's VPN and open **Tools > VPN Hotspot**.
+Under **Active interfaces**, enable **Select all** to share the VPN with all current and future Android tethering
+interfaces, or enable **Auto-enable on reconnect** for just the desired interfaces. These settings share existing
+connections; they do not turn on Android tethering. The foreground service keeps watching when the UI closes. Enable
+**Start on boot** to restore monitoring after a reboot. Android's explicit Force stop still stops the service.
+
 The optional **Auto-match exit IP country code** setting requests a Wi-Fi regulatory country override based on the routed
 exit IP. The exit IP does not tell you where the device is physically located: only enable this if the matching code is
 permitted where you use the device. Support depends on the Android build and Wi-Fi driver. Turn matching off before

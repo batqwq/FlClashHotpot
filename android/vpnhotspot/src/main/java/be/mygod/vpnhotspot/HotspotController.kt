@@ -103,6 +103,7 @@ object HotspotController {
         val ipv6Mode: String = "block",
         val tetherOffloadEnabled: Boolean = false,
         val autoStart: Boolean = false,
+        val alwaysShareAll: Boolean = false,
         val autoMatchCountryCode: Boolean = false,
         val currentCountryCode: String? = null,
         val appliedCountryCode: String? = null,
@@ -131,6 +132,7 @@ object HotspotController {
             "ipv6Mode" to ipv6Mode,
             "tetherOffloadEnabled" to tetherOffloadEnabled,
             "autoStart" to autoStart,
+            "alwaysShareAll" to alwaysShareAll,
             "autoMatchCountryCode" to autoMatchCountryCode,
             "currentCountryCode" to currentCountryCode,
             "appliedCountryCode" to appliedCountryCode,
@@ -527,11 +529,11 @@ object HotspotController {
         withContext(scope.coroutineContext) { rebuildSnapshot() }
     }
 
-    fun openNativeUi(context: Context) {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            if (context !is android.app.Activity) addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        context.startActivity(intent)
+    fun setAlwaysShareAll(context: Context, enabled: Boolean) {
+        context.startForegroundService(
+            Intent(context, TetheringService::class.java)
+                .putExtra(TetheringService.EXTRA_ALWAYS_SHARE_ALL, enabled),
+        )
     }
 
     fun openSystemTetheringSettings(context: Context) {
@@ -546,6 +548,7 @@ object HotspotController {
         ipv6Mode = ipv6ModeName(RoutingManager.ipv6Mode),
         tetherOffloadEnabled = TetherOffloadManager.enabled,
         autoStart = app.pref.getBoolean(BootReceiver.KEY, false),
+        alwaysShareAll = TetheringService.alwaysShareAll,
         autoMatchCountryCode = WifiCountryCodeCommands.autoMatchEnabled,
         currentCountryCode = cachedCountryCode,
         appliedCountryCode = WifiCountryCodeCommands.appliedCountryCode,
@@ -561,7 +564,7 @@ object HotspotController {
         val managed = managedIfaces.asSet()
         val inactive = inactiveIfaces.asSet()
         val monitored = monitoredIfaces.asSet()
-        val allIfaces = (tetherStates.tethered + monitored).toSortedSet()
+        val allIfaces = (tetherStates.tethered + tetherStates.available + monitored).toSortedSet()
         val interfaceList = allIfaces.map { iface ->
             val addresses = ifaceLookup[iface]?.interfaceAddresses?.mapNotNull { addr ->
                 val host = addr.address?.hostAddress?.substringBefore('%') ?: return@mapNotNull null
@@ -572,7 +575,7 @@ object HotspotController {
                 type = tetherTypeName(TetherType.ofInterface(iface)),
                 managed = iface in managed && iface !in inactive,
                 monitored = iface in monitored,
-                inactive = iface in inactive,
+                inactive = iface in inactive || iface !in tetherStates.tethered,
                 addresses = addresses,
             )
         }
@@ -589,6 +592,7 @@ object HotspotController {
             ipv6Mode = ipv6ModeName(RoutingManager.ipv6Mode),
             tetherOffloadEnabled = TetherOffloadManager.enabled,
             autoStart = app.pref.getBoolean(BootReceiver.KEY, false),
+            alwaysShareAll = TetheringService.alwaysShareAll,
             autoMatchCountryCode = WifiCountryCodeCommands.autoMatchEnabled,
             currentCountryCode = cachedCountryCode,
             appliedCountryCode = WifiCountryCodeCommands.appliedCountryCode,
