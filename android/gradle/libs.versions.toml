@@ -37,9 +37,3 @@ smali-dexlib2 = { module = "com.android.tools.smali:smali-dexlib2", version.ref 
 timber = "com.jakewharton.timber:timber:5.0.1"
 wire-runtime = { module = "com.squareup.wire:wire-runtime", version.ref = "wire" }
 zxing-core = "com.google.zxing:core:3.5.4"
-
-[plugins]
-compose-compiler = "org.jetbrains.kotlin.plugin.compose:2.4.20"
-kotlin-parcelize = "org.jetbrains.kotlin.plugin.parcelize:2.4.20"
-ksp = "com.google.devtools.ksp:2.3.10"
-wire = { id = "com.squareup.wire", version.ref = "wire" }

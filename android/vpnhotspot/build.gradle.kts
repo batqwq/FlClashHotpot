@@ -20,10 +20,10 @@ import java.io.File
 
 plugins {
     id("com.android.library")
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.wire)
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.parcelize")
+    id("com.squareup.wire")
 }
 
 val daemonTargetByPlatform = linkedMapOf(

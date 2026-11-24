@@ -195,6 +195,16 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
     });
   }
 
+  Future<void> _toggleInterfaceManaged(String iface, bool enabled) {
+    return _runAction(() => hotspotManager.setInterfaceManaged(iface, enabled));
+  }
+
+  Future<void> _toggleInterfaceMonitored(String iface, bool enabled) {
+    return _runAction(
+      () => hotspotManager.setInterfaceMonitored(iface, enabled),
+    );
+  }
+
   String _masqueradeLabel(AppLocalizations l, HotspotMasqueradeMode mode) {
     return switch (mode) {
       HotspotMasqueradeMode.none => l.hotspotMasqueradeNone,
@@ -325,8 +335,10 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
               title: Text(l.hotspotEthernetTethering),
               value: snapshot.ethernetTetheringActive,
               onChanged: (value) => _runAction(
-                () =>
-                    hotspotManager.setSystemTetheringEnabled('ethernet', value),
+                () => hotspotManager.setSystemTetheringEnabled(
+                  'ethernet',
+                  value,
+                ),
               ),
             ),
           if (snapshot.repeaterSupported)
@@ -367,24 +379,15 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
                 value: iface.managed,
                 onChanged: iface.inactive
                     ? null
-                    : (value) => _runAction(
-                        () => hotspotManager.setInterfaceManaged(
-                          iface.name,
-                          value,
-                        ),
-                      ),
+                    : (value) => _toggleInterfaceManaged(iface.name, value),
               ),
               if (iface.managed || iface.monitored)
                 ListItem.toggle(
                   title: Text(l.hotspotWatchReconnect),
                   subtitle: Text(iface.name),
                   value: iface.monitored,
-                  onChanged: (value) => _runAction(
-                    () => hotspotManager.setInterfaceMonitored(
-                      iface.name,
-                      value,
-                    ),
-                  ),
+                  onChanged: (value) =>
+                      _toggleInterfaceMonitored(iface.name, value),
                 ),
             ],
           ],

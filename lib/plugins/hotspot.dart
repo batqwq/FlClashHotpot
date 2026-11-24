@@ -407,7 +407,9 @@ class AndroidHotspotHost implements HotspotHost {
     return _stateEventChannel
         .receiveBroadcastStream()
         .where((event) => event is Map<Object?, Object?>)
-        .map((event) => HotspotSnapshot.fromMap(event as Map<Object?, Object?>));
+        .map(
+          (event) => HotspotSnapshot.fromMap(event as Map<Object?, Object?>),
+        );
   }
 
   @override
