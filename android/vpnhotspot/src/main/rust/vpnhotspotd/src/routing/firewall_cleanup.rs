@@ -17,6 +17,16 @@ use super::Runtime;
 // https://android.googlesource.com/platform/external/iptables/+/android-10.0.0_r1/iptables/ip6tables-restore.c#36
 // https://android.googlesource.com/platform/external/iptables/+/android-10.0.0_r1/iptables/ip6tables-restore.c#36
 // https://android.googlesource.com/platform/external/iptables/+/android-10.0.0_r1/iptables/ip6tables-restore.c#355
+pub(super) async fn delete_legacy_forward_jump() {
+    delete_iptables_repeated(
+        IptablesTarget::Ipv4,
+        "filter",
+        "FORWARD",
+        &["-j", "vpnhotspot_fwd"],
+    )
+    .await;
+}
+
 pub(super) async fn clean() {
     delete_iptables_repeated(
         IptablesTarget::Ipv4,
@@ -39,6 +49,7 @@ pub(super) async fn clean() {
         &["-j", "vpnhotspot_acl"],
     )
     .await;
+    delete_legacy_forward_jump().await;
     delete_iptables_repeated(
         IptablesTarget::Ipv4,
         "nat",
@@ -62,9 +73,11 @@ COMMIT
 *filter
 :vpnhotspot_dns_input - [0:0]
 :vpnhotspot_acl - [0:0]
+:vpnhotspot_fwd - [0:0]
 :vpnhotspot_stats - [0:0]
 -X vpnhotspot_dns_input
 -X vpnhotspot_acl
+-X vpnhotspot_fwd
 -X vpnhotspot_stats
 COMMIT
 *nat

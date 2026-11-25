@@ -136,13 +136,22 @@ pub(super) async fn delete_rule_repeated(
     family: IpFamily,
     priority: u32,
 ) -> io::Result<()> {
+    delete_rule_repeated_for_iif(connection, family, "", priority).await
+}
+
+pub(super) async fn delete_rule_repeated_for_iif(
+    connection: &mut netlink::RequestConnection,
+    family: IpFamily,
+    iif: &str,
+    priority: u32,
+) -> io::Result<()> {
     loop {
         let result = apply_rule_command(
             connection,
             &IpRuleCommand {
                 operation: IpOperation::Delete,
                 family,
-                iif: String::new(),
+                iif: iif.to_owned(),
                 priority,
                 action: RuleAction::Any,
                 table: 0,

@@ -22,7 +22,7 @@ use iptables::{
 use ipv6_nat_firewall::Ipv6NatFirewall;
 use ipv6_nat_intercept::Ipv6NatInterceptMode;
 use ndc::{add_ip_forward, remove_ip_forward, run_ndc};
-use netlink_commands::{delete_rule_repeated, IpCommand, IpFamily};
+use netlink_commands::{delete_rule_repeated, delete_rule_repeated_for_iif, IpCommand, IpFamily};
 use static_addresses::clean_ip;
 
 pub(crate) use static_addresses::replace_static_addresses;
@@ -38,6 +38,7 @@ const RULE_PRIORITY_DAEMON_BASE: u32 = 20600;
 const RULE_PRIORITY_UPSTREAM_BASE: u32 = 20700;
 const RULE_PRIORITY_UPSTREAM_FALLBACK_BASE: u32 = 20800;
 const RULE_PRIORITY_UPSTREAM_DISABLE_SYSTEM_BASE: u32 = 20900;
+const LEGACY_V2_RULE_PRIORITIES: [u32; 3] = [17800, 17900, 17980];
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 enum RoutingMutation {
@@ -126,10 +127,36 @@ impl Runtime {
             applied: Vec::new(),
             connection,
         };
+        runtime.clean_legacy_v2_state(&config.downstream).await;
         let desired = runtime.desired_mutations(config).await;
         runtime.reconcile(desired).await;
         let committed = runtime.reconcile_committed_ports(config).await;
         (runtime, committed)
+    }
+
+    async fn clean_legacy_v2_state(&mut self, downstream: &str) {
+        if platform::android_api_level() >= 31 {
+            for priority in LEGACY_V2_RULE_PRIORITIES {
+                if let Err(e) = delete_rule_repeated_for_iif(
+                    &mut self.connection,
+                    IpFamily::Ipv4,
+                    downstream,
+                    priority,
+                )
+                .await
+                {
+                    report::io_with_details(
+                        "routing.clean_legacy_v2_rule",
+                        e,
+                        [
+                            ("downstream", downstream.to_owned()),
+                            ("priority", priority.to_string()),
+                        ],
+                    );
+                }
+            }
+        }
+        firewall_cleanup::delete_legacy_forward_jump().await;
     }
 
     pub(crate) async fn replace(
@@ -280,6 +307,9 @@ pub(crate) async fn clean(
         rule_priority(RULE_PRIORITY_UPSTREAM_DISABLE_SYSTEM_BASE),
     )
     .await?;
+    for priority in LEGACY_V2_RULE_PRIORITIES {
+        delete_rule_repeated(connection, IpFamily::Ipv4, priority).await?;
+    }
     clean_ip(connection, command).await?;
     firewall_cleanup::clean().await;
     Ok(())
