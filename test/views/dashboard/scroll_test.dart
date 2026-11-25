@@ -2,6 +2,8 @@ import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/views/dashboard/dashboard.dart';
+import 'package:fl_clash/views/dashboard/widgets/hotspot.dart';
+import 'package:fl_clash/views/hotspot.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,6 +50,23 @@ void main() {
     await tester.pump(const Duration(seconds: 5));
   }
 
+  testWidgets('the Android dashboard opens hotspot settings from its card', (
+    tester,
+  ) async {
+    await pumpDashboard(tester, const Size(412, 700), SupportPlatform.Android);
+    final card = find.byType(HotspotCard);
+    expect(card, findsOneWidget);
+
+    await tester.ensureVisible(card);
+    await tester.pump();
+    await tester.tap(card);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(HotspotView), findsOneWidget);
+
+    await teardown(tester);
+  });
+
   testWidgets('the phone cards keep their scroll end while scrolling', (
     tester,
   ) async {
@@ -80,6 +99,7 @@ void main() {
       const Size(1220, 900),
       SupportPlatform.MacOS,
     );
+    expect(find.byType(HotspotCard), findsNothing);
     expect(position.maxScrollExtent, 0);
 
     final gesture = await tester.startGesture(const Offset(600, 450));

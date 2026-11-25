@@ -12,6 +12,7 @@ import 'edit.dart';
 import 'layout.dart';
 import 'style.dart';
 import 'widget_registry.dart';
+import 'widgets/hotspot.dart';
 import 'widgets/widgets.dart';
 
 // Narrower columns leave a pair of service cells too tight for a status, so
@@ -197,6 +198,8 @@ class _DesktopDashboard extends StatelessWidget {
                   topHeight,
                   const RepaintBoundary(child: CurrentOutboundCard()),
                 ),
+                if (platform == SupportPlatform.Android)
+                  const RepaintBoundary(child: HotspotCard()),
                 sized(
                   topHeight,
                   row(const [
@@ -231,6 +234,8 @@ class _DesktopDashboard extends StatelessWidget {
               (1, SpeedCard(direction: TrafficDirection.download)),
             ]),
           ),
+          if (platform == SupportPlatform.Android)
+            sized(summaryHeight, const RepaintBoundary(child: HotspotCard())),
           sized(
             controlHeight,
             row([(2, const OutboundModeBar()), ...switches]),
@@ -255,7 +260,8 @@ class _DesktopDashboard extends StatelessWidget {
             topHeight +
             controlHeight +
             middleHeight +
-            gap * 3;
+            gap * 3 +
+            (platform == SupportPlatform.Android ? summaryHeight + gap : 0);
         final tablesFit = constraints.maxHeight >= rowsHeight + tablesHeight;
         final fills = constraints.maxHeight >= rowsHeight + summaryHeight;
         return SingleChildScrollView(
@@ -358,11 +364,15 @@ class _MobileDashboard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: gap,
                   children: [
-                    for (final widget in widgets)
+                    for (final widget in widgets) ...[
                       RepaintBoundary(
                         key: cardKeyOf(widget),
                         child: widget.card,
                       ),
+                      if (platform == SupportPlatform.Android &&
+                          widget == DashboardWidget.currentOutbound)
+                        const RepaintBoundary(child: HotspotCard()),
+                    ],
                   ],
                 ),
               ),
