@@ -169,6 +169,12 @@ class _FakeHotspotHost implements HotspotHost {
   }
 
   @override
+  Future<void> setMacWiredMode(bool enabled) async {
+    _throwIfNeeded();
+    calls.add('macWiredMode:$enabled');
+  }
+
+  @override
   Future<void> openSystemTetheringSettings() async {
     _throwIfNeeded();
     calls.add('openSystemTetheringSettings');
@@ -246,6 +252,8 @@ void main() {
       localOnlyActive: false,
       systemHotspotActive: true,
       usbTetheringActive: false,
+      ncmSupported: true,
+      ncmTetheringActive: false,
       ethernetSupported: true,
       ethernetTetheringActive: false,
       activeClientCount: 1,
@@ -291,6 +299,20 @@ void main() {
     await tester.tap(find.text('Reset to system default'));
     await tester.pumpAndSettle();
     expect(host.calls, contains('countryCode:null'));
+
+    final macWired = find.text('Mac wired mode');
+    await tester.ensureVisible(macWired);
+    await tester.pumpAndSettle();
+    await tester.tap(macWired);
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('macWiredMode:true'));
+
+    final usbNcm = find.text('USB NCM tethering (Mac)');
+    await tester.ensureVisible(usbNcm);
+    await tester.pumpAndSettle();
+    await tester.tap(usbNcm);
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('system:ncm:true'));
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -600));
     await tester.pumpAndSettle();

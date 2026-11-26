@@ -1184,5 +1184,9 @@
   "hotspotAndroidOnly": "La zona Wi-Fi VPN solo está disponible en Android 10+",
   "hotspotCountryCodeUpdated": "Código de país Wi-Fi establecido en {code}",
   "hotspotCountryCodeReset": "Código de país Wi-Fi restablecido al valor del sistema",
-  "hotspotCleaned": "Reglas de enrutamiento limpiadas"
+  "hotspotCleaned": "Reglas de enrutamiento limpiadas",
+  "hotspotMacWiredMode": "Modo cableado para Mac",
+  "hotspotMacWiredModeDesc": "Compartir automáticamente conexiones por cable (USB NCM y Ethernet) para macOS sin controladores",
+  "hotspotUsbNcmTethering": "Anclaje USB NCM (Mac)",
+  "hotspotUsbNcmTetheringDesc": "Modo CDC NCM sin controladores para macOS"
 }

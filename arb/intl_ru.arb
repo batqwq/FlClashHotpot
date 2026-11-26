@@ -1184,5 +1184,9 @@
   "hotspotAndroidOnly": "VPN-точка доступа доступна только на Android 10+",
   "hotspotCountryCodeUpdated": "Код страны Wi-Fi установлен: {code}",
   "hotspotCountryCodeReset": "Код страны Wi-Fi сброшен на системный",
-  "hotspotCleaned": "Правила маршрутизации очищены"
+  "hotspotCleaned": "Правила маршрутизации очищены",
+  "hotspotMacWiredMode": "Проводной режим для Mac",
+  "hotspotMacWiredModeDesc": "Автоматически раздавать проводной модем (USB NCM и Ethernet) для macOS без драйверов",
+  "hotspotUsbNcmTethering": "USB NCM-модем (Mac)",
+  "hotspotUsbNcmTetheringDesc": "Режим CDC NCM без драйверов для macOS"
 }

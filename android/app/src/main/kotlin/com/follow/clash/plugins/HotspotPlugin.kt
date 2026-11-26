@@ -257,6 +257,15 @@ class HotspotPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAw
                 runSyncResult(result) { HotspotController.setAlwaysShareAll(activeContext(), enabled) }
             }
 
+            "setMacWiredMode" -> {
+                val enabled = call.argument<Boolean>("enabled")
+                    ?: return result.error(ERROR_ARGUMENT, "Missing enabled", null)
+                launchResult(result) {
+                    HotspotController.setMacWiredMode(activeContext(), enabled)
+                    null
+                }
+            }
+
             "openSystemTetheringSettings" -> runSyncResult(result) {
                 HotspotController.openSystemTetheringSettings(activeContext())
             }

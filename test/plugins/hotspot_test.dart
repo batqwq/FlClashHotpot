@@ -102,6 +102,11 @@ class _FakeHotspotHost implements HotspotHost {
   }
 
   @override
+  Future<void> setMacWiredMode(bool enabled) async {
+    calls.add('setMacWiredMode:$enabled');
+  }
+
+  @override
   Future<void> openSystemTetheringSettings() async {
     calls.add('openSystemTetheringSettings');
   }
@@ -222,6 +227,9 @@ void main() {
               'supported': true,
               'vpnUpstream': 'tun0',
               'alwaysShareAll': true,
+              'macWiredMode': true,
+              'ncmTetheringActive': true,
+              'ncmSupported': true,
             },
             'setSystemTetheringEnabled' => true,
             'setCountryCode' => 'US',
@@ -233,6 +241,9 @@ void main() {
     final state = await host.getState();
     expect(state.vpnUpstream, 'tun0');
     expect(state.alwaysShareAll, isTrue);
+    expect(state.macWiredMode, isTrue);
+    expect(state.ncmTetheringActive, isTrue);
+    expect(state.ncmSupported, isTrue);
     await host.setInterfaceManaged('wlan2', true);
     await host.setInterfaceMonitored('wlan2', true);
     await host.setRepeaterEnabled(true);
@@ -246,6 +257,7 @@ void main() {
     expect(await host.setCountryCode('us'), 'US');
     await host.cleanRouting();
     await host.setAlwaysShareAll(true);
+    await host.setMacWiredMode(true);
     await host.openSystemTetheringSettings();
 
     expect(recorded.map((c) => c.method), [
@@ -263,6 +275,7 @@ void main() {
       'setCountryCode',
       'cleanRouting',
       'setAlwaysShareAll',
+      'setMacWiredMode',
       'openSystemTetheringSettings',
     ]);
     expect(recorded[recorded.length - 2].arguments, {'enabled': true});
@@ -320,6 +333,7 @@ void main() {
     expect(await hotspotManager.setCountryCode('jp'), 'JP');
     await hotspotManager.cleanRouting();
     await hotspotManager.setAlwaysShareAll(false);
+    await hotspotManager.setMacWiredMode(true);
     await hotspotManager.openSystemTetheringSettings();
 
     expect(fake.calls, [
@@ -337,6 +351,7 @@ void main() {
       'setCountryCode:jp',
       'cleanRouting',
       'setAlwaysShareAll:false',
+      'setMacWiredMode:true',
       'openSystemTetheringSettings',
     ]);
   });

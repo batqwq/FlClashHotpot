@@ -308,6 +308,14 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
         title: l.hotspotTethering,
         items: [
           ListItem.toggle(
+            leading: const GlyphIcon(AppGlyphs.connections),
+            title: Text(l.hotspotMacWiredMode),
+            subtitle: Text(l.hotspotMacWiredModeDesc),
+            value: snapshot.macWiredMode,
+            onChanged: (value) =>
+                _runAction(() => hotspotManager.setMacWiredMode(value)),
+          ),
+          ListItem.toggle(
             leading: const GlyphIcon(AppGlyphs.wifi),
             title: Text(l.hotspotWifiTethering),
             value: snapshot.systemHotspotActive,
@@ -323,6 +331,16 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
               () => hotspotManager.setSystemTetheringEnabled('usb', value),
             ),
           ),
+          if (snapshot.ncmSupported)
+            ListItem.toggle(
+              leading: const GlyphIcon(AppGlyphs.link),
+              title: Text(l.hotspotUsbNcmTethering),
+              subtitle: Text(l.hotspotUsbNcmTetheringDesc),
+              value: snapshot.ncmTetheringActive,
+              onChanged: (value) => _runAction(
+                () => hotspotManager.setSystemTetheringEnabled('ncm', value),
+              ),
+            ),
           if (snapshot.ethernetSupported)
             ListItem.toggle(
               leading: const GlyphIcon(AppGlyphs.connections),
@@ -377,7 +395,11 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
                   : Text(iface.addresses.join(', ')),
               value: iface.managed,
               onChanged:
-                  iface.inactive || iface.monitored || snapshot.alwaysShareAll
+                  iface.inactive ||
+                      iface.monitored ||
+                      snapshot.alwaysShareAll ||
+                      (snapshot.macWiredMode &&
+                          (iface.type == 'usb' || iface.type == 'ethernet'))
                   ? null
                   : (value) => _toggleInterfaceManaged(iface.name, value),
             ),

@@ -171,6 +171,7 @@ class HotspotSnapshot {
     this.tetherOffloadEnabled = false,
     this.autoStart = false,
     this.alwaysShareAll = false,
+    this.macWiredMode = false,
     this.autoMatchCountryCode = false,
     this.currentCountryCode,
     this.appliedCountryCode,
@@ -183,6 +184,8 @@ class HotspotSnapshot {
     this.localOnlySsid,
     this.systemHotspotActive = false,
     this.usbTetheringActive = false,
+    this.ncmTetheringActive = false,
+    this.ncmSupported = false,
     this.ethernetTetheringActive = false,
     this.ethernetSupported = false,
     this.interfaces = const [],
@@ -218,6 +221,7 @@ class HotspotSnapshot {
       tetherOffloadEnabled: map['tetherOffloadEnabled'] == true,
       autoStart: map['autoStart'] == true,
       alwaysShareAll: map['alwaysShareAll'] == true,
+      macWiredMode: map['macWiredMode'] == true,
       autoMatchCountryCode: map['autoMatchCountryCode'] == true,
       currentCountryCode: normalizeHotspotCountryCode(
         map['currentCountryCode'] as String?,
@@ -234,6 +238,8 @@ class HotspotSnapshot {
       localOnlySsid: map['localOnlySsid'] as String?,
       systemHotspotActive: map['systemHotspotActive'] == true,
       usbTetheringActive: map['usbTetheringActive'] == true,
+      ncmTetheringActive: map['ncmTetheringActive'] == true,
+      ncmSupported: map['ncmSupported'] == true,
       ethernetTetheringActive: map['ethernetTetheringActive'] == true,
       ethernetSupported: map['ethernetSupported'] == true,
       interfaces: interfaces,
@@ -252,6 +258,7 @@ class HotspotSnapshot {
   final bool tetherOffloadEnabled;
   final bool autoStart;
   final bool alwaysShareAll;
+  final bool macWiredMode;
   final bool autoMatchCountryCode;
   final String? currentCountryCode;
   final String? appliedCountryCode;
@@ -264,6 +271,8 @@ class HotspotSnapshot {
   final String? localOnlySsid;
   final bool systemHotspotActive;
   final bool usbTetheringActive;
+  final bool ncmTetheringActive;
+  final bool ncmSupported;
   final bool ethernetTetheringActive;
   final bool ethernetSupported;
   final List<HotspotInterface> interfaces;
@@ -282,6 +291,8 @@ class HotspotSnapshot {
       other.ipv6Mode == ipv6Mode &&
       other.tetherOffloadEnabled == tetherOffloadEnabled &&
       other.autoStart == autoStart &&
+      other.alwaysShareAll == alwaysShareAll &&
+      other.macWiredMode == macWiredMode &&
       other.autoMatchCountryCode == autoMatchCountryCode &&
       other.currentCountryCode == currentCountryCode &&
       other.appliedCountryCode == appliedCountryCode &&
@@ -294,6 +305,8 @@ class HotspotSnapshot {
       other.localOnlySsid == localOnlySsid &&
       other.systemHotspotActive == systemHotspotActive &&
       other.usbTetheringActive == usbTetheringActive &&
+      other.ncmTetheringActive == ncmTetheringActive &&
+      other.ncmSupported == ncmSupported &&
       other.ethernetTetheringActive == ethernetTetheringActive &&
       other.ethernetSupported == ethernetSupported &&
       listEquals(other.interfaces, interfaces) &&
@@ -323,8 +336,12 @@ class HotspotSnapshot {
     localOnlySsid,
     systemHotspotActive,
     usbTetheringActive,
+    ncmTetheringActive,
+    ncmSupported,
     ethernetTetheringActive,
     ethernetSupported,
+    alwaysShareAll,
+    macWiredMode,
     Object.hashAll(interfaces),
     Object.hashAll(clients),
     activeClientCount,
@@ -375,6 +392,8 @@ abstract interface class HotspotHost {
   Future<void> cleanRouting();
 
   Future<void> setAlwaysShareAll(bool enabled);
+
+  Future<void> setMacWiredMode(bool enabled);
 
   Future<void> openSystemTetheringSettings();
 }
@@ -518,6 +537,13 @@ class AndroidHotspotHost implements HotspotHost {
   }
 
   @override
+  Future<void> setMacWiredMode(bool enabled) {
+    return _methodChannel.invokeMethod<void>('setMacWiredMode', {
+      'enabled': enabled,
+    });
+  }
+
+  @override
   Future<void> openSystemTetheringSettings() {
     return _methodChannel.invokeMethod<void>('openSystemTetheringSettings');
   }
@@ -577,6 +603,9 @@ class _UnsupportedHotspotHost implements HotspotHost {
 
   @override
   Future<void> setAlwaysShareAll(bool enabled) async {}
+
+  @override
+  Future<void> setMacWiredMode(bool enabled) async {}
 
   @override
   Future<void> openSystemTetheringSettings() async {}
@@ -640,6 +669,9 @@ class HotspotManager {
 
   Future<void> setAlwaysShareAll(bool enabled) =>
       _host.setAlwaysShareAll(enabled);
+
+  Future<void> setMacWiredMode(bool enabled) =>
+      _host.setMacWiredMode(enabled);
 
   Future<void> openSystemTetheringSettings() =>
       _host.openSystemTetheringSettings();

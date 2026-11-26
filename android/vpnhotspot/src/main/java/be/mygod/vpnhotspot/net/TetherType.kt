@@ -163,7 +163,7 @@ enum class TetherType(@get:DrawableRes val icon: Int, @get:StringRes val label: 
             TetheringManagerCompat.TETHERING_USB -> USB
             TetheringManagerCompat.TETHERING_BLUETOOTH -> BLUETOOTH
             3 -> WIFI_P2P
-            4 -> NCM
+            TetheringManagerCompat.TETHERING_NCM -> NCM
             TetheringManagerCompat.TETHERING_ETHERNET -> ETHERNET
             6 -> WIGIG
             7 -> VIRTUAL

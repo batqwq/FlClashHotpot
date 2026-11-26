@@ -103,6 +103,14 @@ object TetheringManagerCompat {
      */
     const val TETHERING_BLUETOOTH = 2
     /**
+     * USB NCM (CDC NCM) tethering type.
+     *
+     * Requires MANAGE_USB permission, also.
+     * @see startTethering
+     */
+    @RequiresApi(30)
+    const val TETHERING_NCM = 4
+    /**
      * Ethernet tethering type.
      *
      * Requires MANAGE_USB permission, also.

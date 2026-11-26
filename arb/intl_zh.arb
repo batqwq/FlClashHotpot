@@ -1184,5 +1184,9 @@
   "hotspotAndroidOnly": "VPN 热点仅支持 Android 10 及以上系统",
   "hotspotCountryCodeUpdated": "Wi-Fi 国家代码已设为 {code}",
   "hotspotCountryCodeReset": "Wi-Fi 国家代码已恢复系统默认",
-  "hotspotCleaned": "路由规则已清理"
+  "hotspotCleaned": "路由规则已清理",
+  "hotspotMacWiredMode": "Mac 专属有线模式",
+  "hotspotMacWiredModeDesc": "自动接管有线共享（USB NCM 与以太网），免驱直连 macOS",
+  "hotspotUsbNcmTethering": "USB NCM 共享（Mac 免驱）",
+  "hotspotUsbNcmTetheringDesc": "适用于 macOS 的免驱 CDC NCM 有线共享"
 }

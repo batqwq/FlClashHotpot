@@ -1184,5 +1184,9 @@
   "hotspotAndroidOnly": "Le point d'accès VPN est disponible uniquement sur Android 10+",
   "hotspotCountryCodeUpdated": "Code pays Wi-Fi défini sur {code}",
   "hotspotCountryCodeReset": "Code pays Wi-Fi réinitialisé par défaut",
-  "hotspotCleaned": "Règles de routage nettoyées"
+  "hotspotCleaned": "Règles de routage nettoyées",
+  "hotspotMacWiredMode": "Mode filaire Mac",
+  "hotspotMacWiredModeDesc": "Partager automatiquement le partage filaire (USB NCM et Ethernet) pour macOS sans pilote",
+  "hotspotUsbNcmTethering": "Partage USB NCM (Mac)",
+  "hotspotUsbNcmTetheringDesc": "Mode CDC NCM sans pilote pour macOS"
 }

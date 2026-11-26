@@ -12,6 +12,7 @@ import androidx.core.content.edit
 import be.mygod.vpnhotspot.App.Companion.app
 import be.mygod.vpnhotspot.net.Routing
 import be.mygod.vpnhotspot.net.TetherStates
+import be.mygod.vpnhotspot.net.TetherType
 import be.mygod.vpnhotspot.net.TetheringManagerCompat
 import be.mygod.vpnhotspot.root.WifiApCommands
 import be.mygod.vpnhotspot.util.TileServiceDismissHandle
@@ -39,9 +40,17 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
         const val EXTRA_REMOVE_INTERFACE = "interface.remove"
         const val EXTRA_REMOVE_INTERFACE_MONITOR = "interface.remove.monitor"
         const val EXTRA_ALWAYS_SHARE_ALL = "interface.alwaysShareAll"
+        const val EXTRA_MAC_WIRED_MODE = "interface.macWiredMode"
         private const val KEY_ALWAYS_SHARE_ALL = "service.hotspot.alwaysShareAll"
+        private const val KEY_MAC_WIRED_MODE = "service.hotspot.macWiredMode"
 
         val alwaysShareAll get() = app.pref.getBoolean(KEY_ALWAYS_SHARE_ALL, false)
+        val macWiredMode get() = app.pref.getBoolean(KEY_MAC_WIRED_MODE, false)
+
+        fun isWiredTetherInterface(iface: String): Boolean = when (TetherType.ofInterface(iface)) {
+            TetherType.NCM, TetherType.ETHERNET, TetherType.USB -> true
+            else -> false
+        }
 
         var dismissHandle: TileServiceDismissHandle? = null
         private fun dismissIfApplicable() = dismissHandle?.run {
@@ -116,11 +125,15 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
     private suspend fun reconcileDownstreamsLocked() {
         val tethered = tetheredIfaces ?: return
         val all = alwaysShareAll
-        if (all) for (iface in tethered) {
-            downstreams.compute(iface) { _, current -> current ?: Downstream(this, iface) }
+        val macWired = macWiredMode
+        if (all || macWired) for (iface in tethered) {
+            if (all || isWiredTetherInterface(iface)) {
+                downstreams.compute(iface) { _, current -> current ?: Downstream(this, iface) }
+            }
         }
         downstreams.toMutableScatterMap().forEach { iface, downstream ->
-            if (iface in tethered && (all || downstream.manual || downstream.monitor)) {
+            val autoManaged = all || (macWired && isWiredTetherInterface(iface))
+            if (iface in tethered && (autoManaged || downstream.manual || downstream.monitor)) {
                 if (!downstream.started && !downstream.start()) dismissIfApplicable()
             } else {
                 if (!downstream.monitor) check(downstreams.remove(iface, downstream))
@@ -143,8 +156,9 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
                 if (!downstream.started) inactiveIfaces.add(downstream.downstream)
             }
         }
+        val keepListening = alwaysShareAll || macWiredMode
         monitoredIfaces.also { ifaces ->
-            if (ifaces.isEmpty() && !alwaysShareAll) {
+            if (ifaces.isEmpty() && !keepListening) {
                 BootReceiver.delete<TetheringService>()
             } else BootReceiver.add<TetheringService>(Starter(ArrayList<String>(ifaces.size).apply {
                 ifaces.forEach { iface -> add(iface) }
@@ -158,7 +172,7 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
             inactiveIfaceSet.value = inactiveIfaces
             this@TetheringService.managedIfaces.value = managedIfaces
         }
-        if (managedIfaces.isEmpty() && !alwaysShareAll) {
+        if (managedIfaces.isEmpty() && !keepListening) {
             if (stopSelfResult(handledStartId)) {
                 interfaces.value = null
                 ServiceNotification.stopForeground(this)
@@ -197,6 +211,9 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
             if (intent.hasExtra(EXTRA_ALWAYS_SHARE_ALL)) app.pref.edit {
                 putBoolean(KEY_ALWAYS_SHARE_ALL, intent.getBooleanExtra(EXTRA_ALWAYS_SHARE_ALL, false))
             }
+            if (intent.hasExtra(EXTRA_MAC_WIRED_MODE)) app.pref.edit {
+                putBoolean(KEY_MAC_WIRED_MODE, intent.getBooleanExtra(EXTRA_MAC_WIRED_MODE, false))
+            }
             for (iface in intent.getStringArrayExtra(EXTRA_ADD_INTERFACES) ?: emptyArray()) {
                 val downstream = downstreams.compute(iface) { _, current ->
                     (current ?: Downstream(this, iface)).apply { manual = true }
@@ -212,7 +229,9 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
             intent.getStringExtra(EXTRA_REMOVE_INTERFACE_MONITOR)?.also { iface ->
                 downstreams[iface]?.let { downstream ->
                     downstream.monitor = false
-                    if (!downstream.manual && !alwaysShareAll) downstreams.remove(iface)?.stop()
+                    if (!downstream.manual && !alwaysShareAll && !(macWiredMode && isWiredTetherInterface(iface))) {
+                        downstreams.remove(iface)?.stop()
+                    }
                 }
             }
         }

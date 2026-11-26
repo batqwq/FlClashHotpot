@@ -1184,5 +1184,9 @@
   "hotspotAndroidOnly": "VPN ホットスポットは Android 10 以降でのみ利用可能です",
   "hotspotCountryCodeUpdated": "Wi-Fi 国コードを {code} に設定しました",
   "hotspotCountryCodeReset": "Wi-Fi 国コードをシステムデフォルトに戻しました",
-  "hotspotCleaned": "ルーティングルールをクリアしました"
+  "hotspotCleaned": "ルーティングルールをクリアしました",
+  "hotspotMacWiredMode": "Mac 専用有線モード",
+  "hotspotMacWiredModeDesc": "macOS 向けに有線テザリング（USB NCM・イーサネット）をドライバ不要で自動共有",
+  "hotspotUsbNcmTethering": "USB NCM テザリング（Mac）",
+  "hotspotUsbNcmTetheringDesc": "macOS 向けのドライバ不要 CDC NCM モード"
 }

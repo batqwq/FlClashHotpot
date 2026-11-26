@@ -1299,5 +1299,9 @@
   "hotspotAndroidOnly": "VPN Hotspot is only available on Android 10+",
   "hotspotCountryCodeUpdated": "Wi-Fi country code set to {code}",
   "hotspotCountryCodeReset": "Wi-Fi country code reset to system default",
-  "hotspotCleaned": "Routing rules cleaned"
+  "hotspotCleaned": "Routing rules cleaned",
+  "hotspotMacWiredMode": "Mac wired mode",
+  "hotspotMacWiredModeDesc": "Auto-share wired tethering (USB NCM & Ethernet) for macOS without driver",
+  "hotspotUsbNcmTethering": "USB NCM tethering (Mac)",
+  "hotspotUsbNcmTetheringDesc": "Driverless CDC NCM mode for macOS"
 }

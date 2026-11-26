@@ -104,6 +104,7 @@ object HotspotController {
         val tetherOffloadEnabled: Boolean = false,
         val autoStart: Boolean = false,
         val alwaysShareAll: Boolean = false,
+        val macWiredMode: Boolean = false,
         val autoMatchCountryCode: Boolean = false,
         val currentCountryCode: String? = null,
         val appliedCountryCode: String? = null,
@@ -116,6 +117,8 @@ object HotspotController {
         val localOnlySsid: String? = null,
         val systemHotspotActive: Boolean = false,
         val usbTetheringActive: Boolean = false,
+        val ncmTetheringActive: Boolean = false,
+        val ncmSupported: Boolean = Build.VERSION.SDK_INT >= 30,
         val ethernetTetheringActive: Boolean = false,
         val ethernetSupported: Boolean = Build.VERSION.SDK_INT >= 30,
         val interfaces: List<InterfaceSnapshot> = emptyList(),
@@ -133,6 +136,7 @@ object HotspotController {
             "tetherOffloadEnabled" to tetherOffloadEnabled,
             "autoStart" to autoStart,
             "alwaysShareAll" to alwaysShareAll,
+            "macWiredMode" to macWiredMode,
             "autoMatchCountryCode" to autoMatchCountryCode,
             "currentCountryCode" to currentCountryCode,
             "appliedCountryCode" to appliedCountryCode,
@@ -145,6 +149,8 @@ object HotspotController {
             "localOnlySsid" to localOnlySsid,
             "systemHotspotActive" to systemHotspotActive,
             "usbTetheringActive" to usbTetheringActive,
+            "ncmTetheringActive" to ncmTetheringActive,
+            "ncmSupported" to ncmSupported,
             "ethernetTetheringActive" to ethernetTetheringActive,
             "ethernetSupported" to ethernetSupported,
             "interfaces" to interfaces.map { it.toMap() },
@@ -445,6 +451,12 @@ object HotspotController {
         val tetherType = when (type) {
             "wifi" -> TetheringManager.TETHERING_WIFI
             "usb" -> TetheringManagerCompat.TETHERING_USB
+            "ncm" -> {
+                if (Build.VERSION.SDK_INT < 30) {
+                    throw UnsupportedOperationException("USB NCM tethering requires Android 11+")
+                }
+                TetheringManagerCompat.TETHERING_NCM
+            }
             "ethernet" -> TetheringManagerCompat.TETHERING_ETHERNET
             else -> throw IllegalArgumentException("Unsupported tethering type: $type")
         }
@@ -536,6 +548,26 @@ object HotspotController {
         )
     }
 
+    suspend fun setMacWiredMode(context: Context, enabled: Boolean) {
+        context.startForegroundService(
+            Intent(context, TetheringService::class.java)
+                .putExtra(TetheringService.EXTRA_MAC_WIRED_MODE, enabled),
+        )
+        if (enabled && Build.VERSION.SDK_INT >= 30 && Settings.System.canWrite(context)) {
+            val tetheredTypes = tetherStates.tethered.mapTo(HashSet()) { TetherType.ofInterface(it) }
+            if (TetherType.NCM !in tetheredTypes && TetherType.ETHERNET !in tetheredTypes) {
+                try {
+                    TetheringManagerCompat.startTethering(TetheringManagerCompat.TETHERING_NCM, true)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    Timber.d(e, "Best-effort USB NCM start skipped")
+                }
+            }
+        }
+        withContext(scope.coroutineContext) { rebuildSnapshot() }
+    }
+
     fun openSystemTetheringSettings(context: Context) {
         ManageBar.start(context::startActivity)
     }
@@ -549,6 +581,7 @@ object HotspotController {
         tetherOffloadEnabled = TetherOffloadManager.enabled,
         autoStart = app.pref.getBoolean(BootReceiver.KEY, false),
         alwaysShareAll = TetheringService.alwaysShareAll,
+        macWiredMode = TetheringService.macWiredMode,
         autoMatchCountryCode = WifiCountryCodeCommands.autoMatchEnabled,
         currentCountryCode = cachedCountryCode,
         appliedCountryCode = WifiCountryCodeCommands.appliedCountryCode,
@@ -593,6 +626,7 @@ object HotspotController {
             tetherOffloadEnabled = TetherOffloadManager.enabled,
             autoStart = app.pref.getBoolean(BootReceiver.KEY, false),
             alwaysShareAll = TetheringService.alwaysShareAll,
+            macWiredMode = TetheringService.macWiredMode,
             autoMatchCountryCode = WifiCountryCodeCommands.autoMatchEnabled,
             currentCountryCode = cachedCountryCode,
             appliedCountryCode = WifiCountryCodeCommands.appliedCountryCode,
@@ -605,6 +639,8 @@ object HotspotController {
             localOnlySsid = localOnlyConfig?.ssid?.decode() ?: localOnlyConfig?.ssid?.toString(),
             systemHotspotActive = TetherType.WIFI in tetheredTypes,
             usbTetheringActive = TetherType.USB in tetheredTypes || TetherType.NCM in tetheredTypes,
+            ncmTetheringActive = TetherType.NCM in tetheredTypes,
+            ncmSupported = Build.VERSION.SDK_INT >= 30,
             ethernetTetheringActive = TetherType.ETHERNET in tetheredTypes,
             ethernetSupported = Build.VERSION.SDK_INT >= 30,
             interfaces = interfaceList,
