@@ -2,18 +2,17 @@
 
 <img src="assets/images/icon.png" alt="FlClash" width="88">
 
-# FlClash
+# FlClashHotpot
 
-基于 ClashMeta 的多平台代理客户端，简单易用，开源无广告。
+基于 ClashMeta 的多平台代理客户端（基于 [FlClash](https://github.com/chen08209/FlClash) 扩展 Android VPN 热点与 Mac 有线共享），简单易用，开源无广告。
 
 [English](README.md) · **简体中文**
 
-[![Release](https://img.shields.io/github/v/release/chen08209/FlClash?style=flat-square&label=release)](https://github.com/chen08209/FlClash/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/chen08209/FlClash/total?style=flat-square&logo=github)](https://github.com/chen08209/FlClash/releases)
-[![License](https://img.shields.io/github/license/chen08209/FlClash?style=flat-square)](LICENSE)
-[![Telegram](https://img.shields.io/badge/Telegram-channel-26A5E4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/FlClash)
+[![Release](https://img.shields.io/github/v/release/batqwq/FlClashHotpot?style=flat-square&label=release)](https://github.com/batqwq/FlClashHotpot/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/batqwq/FlClashHotpot/total?style=flat-square&logo=github)](https://github.com/batqwq/FlClashHotpot/releases)
+[![License](https://img.shields.io/github/license/batqwq/FlClashHotpot?style=flat-square)](LICENSE)
 
-[官网](https://chen08209.github.io/FlClash/zh) · [下载](#下载) · [更新日志](CHANGELOG.md) · [从源码构建](#从源码构建)
+[下载](#下载) · [更新日志](CHANGELOG.md) · [从源码构建](#从源码构建)
 
 </div>
 
@@ -37,8 +36,7 @@
 
 ## 下载
 
-从 [GitHub Releases](https://github.com/chen08209/FlClash/releases/latest) 获取最新版本，或打开
-[官网](https://chen08209.github.io/FlClash/zh#download)，它会自动为你的设备选好安装包。
+从 [GitHub Releases](https://github.com/batqwq/FlClashHotpot/releases/latest) 获取最新版本。
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
@@ -48,8 +46,7 @@
 | Linux | `.deb`、`.rpm` 和 AppImage，分 x64 与 ARM64 | 托盘依赖见下方说明。 |
 
 <p>
-  <a href="https://chen08209.github.io/FlClash-fdroid-repo/repo?fingerprint=789D6D32668712EF7672F9E58DEEB15FBD6DCEEC5AE7A4371EA72F2AAE8A12FD"><img alt="Get it on F-Droid" src="snapshots/get-it-on-fdroid.svg" height="56"></a>
-  <a href="https://github.com/chen08209/FlClash/releases/latest"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" height="56"></a>
+  <a href="https://github.com/batqwq/FlClashHotpot/releases/latest"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" height="56"></a>
 </p>
 
 **Homebrew**
@@ -72,8 +69,10 @@ FlClash 要在免责声明被接受后才会启动核心。在容器等无人点
 
 **在 Android 上共享 VPN。** 在已 Root 的 Android 10 或更新设备上，启动 FlClash 的 VPN，然后打开「工具」
 中的「VPN 热点」。在「活跃共享接口」中选择「全选」可自动接管当前和之后出现的共享接口，也可单独勾选
-某个接口的「重连时自动开启」。这不会主动打开系统热点或 USB 共享。关闭界面后，前台服务继续监听；
-需要重启恢复时可开启「开机启动」。Android 的「强行停止」仍会停止服务。
+某个接口的「重连时自动开启」。这不会主动打开系统热点或 USB 共享。若需通过有线方式共享给 macOS，
+可开启「Mac 专属有线模式」自动接管 `USB NCM`、`以太网` 与 `USB` 有线共享接口；在 Android 11 及以上
+系统还可直接开关「USB NCM 共享（Mac 免驱）」以启用 macOS 原生免驱的 CDC NCM 模式。关闭界面后，
+前台服务继续监听；需要重启恢复时可开启「开机启动」。Android 的「强行停止」仍会停止服务。
 
 「自动匹配出口 IP 国家代码」会根据代理出口 IP 请求修改 Wi-Fi 无线电监管区域。
 出口 IP 不代表设备的实际位置；仅在相应国家代码符合使用地规定时开启。支持情况取决于系统和 Wi-Fi 驱动。
@@ -105,8 +104,8 @@ adb shell am start -a com.follow.clash.action.TOGGLE
 以及通过 rustup 安装的 [Rust](https://rustup.rs/)。桌面端需要在对应系统上构建，Android 在任意系统上都能构建。
 
 ```bash
-git clone --recursive https://github.com/chen08209/FlClash.git
-cd FlClash
+git clone --recursive https://github.com/batqwq/FlClashHotpot.git
+cd FlClashHotpot
 flutter pub get
 dart run tool/package.dart android   # 或 windows、macos、linux
 ```
@@ -124,16 +123,15 @@ dart run tool/package.dart android   # 或 windows、macos、linux
 
 ## 支持
 
-给仓库点一个 Star 是支持项目最简单的方式。问题讨论和更新通知请关注 [Telegram 频道](https://t.me/FlClash)，
-Bug 与功能建议请提交到 [GitHub Issues](https://github.com/chen08209/FlClash/issues)。
+给仓库点一个 Star 是支持项目最简单的方式。Bug 与功能建议请提交到 [GitHub Issues](https://github.com/batqwq/FlClashHotpot/issues)。
 
-<a href="https://star-history.com/#chen08209/FlClash&Date">
+<a href="https://star-history.com/#batqwq/FlClashHotpot&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=chen08209/FlClash&type=Date&theme=dark">
-    <img alt="Star history" src="https://api.star-history.com/svg?repos=chen08209/FlClash&type=Date" width="640">
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=batqwq/FlClashHotpot&type=Date&theme=dark">
+    <img alt="Star history" src="https://api.star-history.com/svg?repos=batqwq/FlClashHotpot&type=Date" width="640">
   </picture>
 </a>
 
 ## 许可证
 
-FlClash 以 [GPL-3.0 协议](LICENSE)发布。
+FlClashHotpot 以 [GPL-3.0 协议](LICENSE)发布。

@@ -2,18 +2,17 @@
 
 <img src="assets/images/icon.png" alt="FlClash" width="88">
 
-# FlClash
+# FlClashHotpot
 
-A multi-platform proxy client based on ClashMeta. Simple to use, open source and ad-free.
+A multi-platform proxy client based on ClashMeta (forked from [FlClash](https://github.com/chen08209/FlClash) with Android VPN Hotspot & Mac wired mode). Simple to use, open source and ad-free.
 
 **English** · [简体中文](README_zh_CN.md)
 
-[![Release](https://img.shields.io/github/v/release/chen08209/FlClash?style=flat-square&label=release)](https://github.com/chen08209/FlClash/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/chen08209/FlClash/total?style=flat-square&logo=github)](https://github.com/chen08209/FlClash/releases)
-[![License](https://img.shields.io/github/license/chen08209/FlClash?style=flat-square)](LICENSE)
-[![Telegram](https://img.shields.io/badge/Telegram-channel-26A5E4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/FlClash)
+[![Release](https://img.shields.io/github/v/release/batqwq/FlClashHotpot?style=flat-square&label=release)](https://github.com/batqwq/FlClashHotpot/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/batqwq/FlClashHotpot/total?style=flat-square&logo=github)](https://github.com/batqwq/FlClashHotpot/releases)
+[![License](https://img.shields.io/github/license/batqwq/FlClashHotpot?style=flat-square)](LICENSE)
 
-[Website](https://chen08209.github.io/FlClash) · [Download](#download) · [Changelog](CHANGELOG.md) · [Build from source](#build-from-source)
+[Download](#download) · [Changelog](CHANGELOG.md) · [Build from source](#build-from-source)
 
 </div>
 
@@ -40,8 +39,7 @@ A multi-platform proxy client based on ClashMeta. Simple to use, open source and
 
 ## Download
 
-Get the latest build from [GitHub Releases](https://github.com/chen08209/FlClash/releases/latest), or open the
-[website](https://chen08209.github.io/FlClash#download), which picks the right file for your device.
+Get the latest build from [GitHub Releases](https://github.com/batqwq/FlClashHotpot/releases/latest).
 
 | Platform | Packages | Notes |
 | --- | --- | --- |
@@ -51,8 +49,7 @@ Get the latest build from [GitHub Releases](https://github.com/chen08209/FlClash
 | Linux | `.deb`, `.rpm` and AppImage, for x64 and ARM64 | See the tray note below. |
 
 <p>
-  <a href="https://chen08209.github.io/FlClash-fdroid-repo/repo?fingerprint=789D6D32668712EF7672F9E58DEEB15FBD6DCEEC5AE7A4371EA72F2AAE8A12FD"><img alt="Get it on F-Droid" src="snapshots/get-it-on-fdroid.svg" height="56"></a>
-  <a href="https://github.com/chen08209/FlClash/releases/latest"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" height="56"></a>
+  <a href="https://github.com/batqwq/FlClashHotpot/releases/latest"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" height="56"></a>
 </p>
 
 **Homebrew**
@@ -77,8 +74,11 @@ FlClash starts the core only after the disclaimer is accepted. Where nobody can 
 **Share the VPN on Android.** On a rooted Android 10 or newer device, start FlClash's VPN and open **Tools > VPN Hotspot**.
 Under **Active interfaces**, enable **Select all** to share the VPN with all current and future Android tethering
 interfaces, or enable **Auto-enable on reconnect** for just the desired interfaces. These settings share existing
-connections; they do not turn on Android tethering. The foreground service keeps watching when the UI closes. Enable
-**Start on boot** to restore monitoring after a reboot. Android's explicit Force stop still stops the service.
+connections; they do not turn on Android tethering. For sharing with macOS over USB or Ethernet, enable **Mac wired mode**
+to automatically share wired tethering interfaces (`USB NCM`, `Ethernet`, and `USB`), and on Android 11+ you can toggle
+**USB NCM tethering (Mac)** directly for driverless CDC NCM tethering on macOS. The foreground service keeps watching
+when the UI closes. Enable **Start on boot** to restore monitoring after a reboot. Android's explicit Force stop still
+stops the service.
 
 The optional **Auto-match exit IP country code** setting requests a Wi-Fi regulatory country override based on the routed
 exit IP. The exit IP does not tell you where the device is physically located: only enable this if the matching code is
@@ -114,8 +114,8 @@ You need [Flutter](https://docs.flutter.dev/get-started/install) 3.50 (release b
 host, except Android, which builds anywhere.
 
 ```bash
-git clone --recursive https://github.com/chen08209/FlClash.git
-cd FlClash
+git clone --recursive https://github.com/batqwq/FlClashHotpot.git
+cd FlClashHotpot
 flutter pub get
 dart run tool/package.dart android   # or windows, macos, linux
 ```
@@ -133,17 +133,16 @@ Run `dart run tool/package.dart --help` for the remaining options, such as `--ta
 
 ## Support
 
-Starring the repository is the easiest way to support the project. Questions and announcements go to the
-[Telegram channel](https://t.me/FlClash); bugs and feature requests go to
-[GitHub Issues](https://github.com/chen08209/FlClash/issues).
+Starring the repository is the easiest way to support the project. Bug reports and feature requests go to
+[GitHub Issues](https://github.com/batqwq/FlClashHotpot/issues).
 
-<a href="https://star-history.com/#chen08209/FlClash&Date">
+<a href="https://star-history.com/#batqwq/FlClashHotpot&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=chen08209/FlClash&type=Date&theme=dark">
-    <img alt="Star history" src="https://api.star-history.com/svg?repos=chen08209/FlClash&type=Date" width="640">
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=batqwq/FlClashHotpot&type=Date&theme=dark">
+    <img alt="Star history" src="https://api.star-history.com/svg?repos=batqwq/FlClashHotpot&type=Date" width="640">
   </picture>
 </a>
 
 ## License
 
-FlClash is released under the [GPL-3.0 license](LICENSE).
+FlClashHotpot is released under the [GPL-3.0 license](LICENSE).
