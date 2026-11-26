@@ -83,6 +83,15 @@ jobs:
           add-to-path: true
           link-to-sdk: true
 
+      - name: Setup Android Signing
+        run: |
+          echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
+          {
+            echo "keyAlias=${{ secrets.KEY_ALIAS }}"
+            echo "storePassword=${{ secrets.STORE_PASSWORD }}"
+            echo "keyPassword=${{ secrets.KEY_PASSWORD }}"
+          } >> android/local.properties
+
       - name: Install dependencies
         run: flutter pub get
 
