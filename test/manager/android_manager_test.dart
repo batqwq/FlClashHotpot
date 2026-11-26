@@ -130,6 +130,9 @@ class _FakeCountryHotspotHost implements HotspotHost {
   Future<void> setAlwaysShareAll(bool enabled) async {}
 
   @override
+  Future<void> setMacWiredMode(bool enabled) async {}
+
+  @override
   Future<void> openSystemTetheringSettings() async {}
 }
 
