@@ -7223,6 +7223,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Routing rules cleaned'**
   String get hotspotCleaned;
+
+  /// No description provided for @hotspotMacWiredMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Mac wired mode'**
+  String get hotspotMacWiredMode;
+
+  /// No description provided for @hotspotMacWiredModeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-share wired tethering (USB NCM & Ethernet) for macOS without driver'**
+  String get hotspotMacWiredModeDesc;
+
+  /// No description provided for @hotspotUsbNcmTethering.
+  ///
+  /// In en, this message translates to:
+  /// **'USB NCM tethering (Mac)'**
+  String get hotspotUsbNcmTethering;
+
+  /// No description provided for @hotspotUsbNcmTetheringDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Driverless CDC NCM mode for macOS'**
+  String get hotspotUsbNcmTetheringDesc;
 }
 
 class _AppLocalizationsDelegate

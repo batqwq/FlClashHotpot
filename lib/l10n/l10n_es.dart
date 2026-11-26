@@ -4150,4 +4150,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get hotspotCleaned => 'Reglas de enrutamiento limpiadas';
+
+  @override
+  String get hotspotMacWiredMode => 'Modo cableado para Mac';
+
+  @override
+  String get hotspotMacWiredModeDesc =>
+      'Compartir automáticamente conexiones por cable (USB NCM y Ethernet) para macOS sin controladores';
+
+  @override
+  String get hotspotUsbNcmTethering => 'Anclaje USB NCM (Mac)';
+
+  @override
+  String get hotspotUsbNcmTetheringDesc =>
+      'Modo CDC NCM sin controladores para macOS';
 }

@@ -3922,4 +3922,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get hotspotCleaned => 'ルーティングルールをクリアしました';
+
+  @override
+  String get hotspotMacWiredMode => 'Mac 専用有線モード';
+
+  @override
+  String get hotspotMacWiredModeDesc =>
+      'macOS 向けに有線テザリング（USB NCM・イーサネット）をドライバ不要で自動共有';
+
+  @override
+  String get hotspotUsbNcmTethering => 'USB NCM テザリング（Mac）';
+
+  @override
+  String get hotspotUsbNcmTetheringDesc => 'macOS 向けのドライバ不要 CDC NCM モード';
 }

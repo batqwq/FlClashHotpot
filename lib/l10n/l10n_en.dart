@@ -4107,4 +4107,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hotspotCleaned => 'Routing rules cleaned';
+
+  @override
+  String get hotspotMacWiredMode => 'Mac wired mode';
+
+  @override
+  String get hotspotMacWiredModeDesc =>
+      'Auto-share wired tethering (USB NCM & Ethernet) for macOS without driver';
+
+  @override
+  String get hotspotUsbNcmTethering => 'USB NCM tethering (Mac)';
+
+  @override
+  String get hotspotUsbNcmTetheringDesc => 'Driverless CDC NCM mode for macOS';
 }

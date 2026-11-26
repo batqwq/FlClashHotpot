@@ -3872,4 +3872,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get hotspotCleaned => '路由规则已清理';
+
+  @override
+  String get hotspotMacWiredMode => 'Mac 专属有线模式';
+
+  @override
+  String get hotspotMacWiredModeDesc => '自动接管有线共享（USB NCM 与以太网），免驱直连 macOS';
+
+  @override
+  String get hotspotUsbNcmTethering => 'USB NCM 共享（Mac 免驱）';
+
+  @override
+  String get hotspotUsbNcmTetheringDesc => '适用于 macOS 的免驱 CDC NCM 有线共享';
 }

@@ -3997,4 +3997,17 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get hotspotCleaned => '라우팅 규칙을 정리했습니다';
+
+  @override
+  String get hotspotMacWiredMode => 'Mac 유선 전용 모드';
+
+  @override
+  String get hotspotMacWiredModeDesc =>
+      'macOS용 유선 테더링(USB NCM 및 이더넷)을 드라이버 없이 자동 공유';
+
+  @override
+  String get hotspotUsbNcmTethering => 'USB NCM 테더링 (Mac)';
+
+  @override
+  String get hotspotUsbNcmTetheringDesc => 'macOS용 드라이버 불필요 CDC NCM 모드';
 }

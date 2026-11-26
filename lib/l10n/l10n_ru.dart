@@ -4100,4 +4100,18 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get hotspotCleaned => 'Правила маршрутизации очищены';
+
+  @override
+  String get hotspotMacWiredMode => 'Проводной режим для Mac';
+
+  @override
+  String get hotspotMacWiredModeDesc =>
+      'Автоматически раздавать проводной модем (USB NCM и Ethernet) для macOS без драйверов';
+
+  @override
+  String get hotspotUsbNcmTethering => 'USB NCM-модем (Mac)';
+
+  @override
+  String get hotspotUsbNcmTetheringDesc =>
+      'Режим CDC NCM без драйверов для macOS';
 }

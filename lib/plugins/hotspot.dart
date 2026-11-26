@@ -670,8 +670,7 @@ class HotspotManager {
   Future<void> setAlwaysShareAll(bool enabled) =>
       _host.setAlwaysShareAll(enabled);
 
-  Future<void> setMacWiredMode(bool enabled) =>
-      _host.setMacWiredMode(enabled);
+  Future<void> setMacWiredMode(bool enabled) => _host.setMacWiredMode(enabled);
 
   Future<void> openSystemTetheringSettings() =>
       _host.openSystemTetheringSettings();

@@ -4155,4 +4155,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get hotspotCleaned => 'Règles de routage nettoyées';
+
+  @override
+  String get hotspotMacWiredMode => 'Mode filaire Mac';
+
+  @override
+  String get hotspotMacWiredModeDesc =>
+      'Partager automatiquement le partage filaire (USB NCM et Ethernet) pour macOS sans pilote';
+
+  @override
+  String get hotspotUsbNcmTethering => 'Partage USB NCM (Mac)';
+
+  @override
+  String get hotspotUsbNcmTetheringDesc =>
+      'Mode CDC NCM sans pilote pour macOS';
 }
