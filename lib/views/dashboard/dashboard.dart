@@ -235,7 +235,7 @@ class _DesktopDashboard extends StatelessWidget {
             ]),
           ),
           if (platform == SupportPlatform.Android)
-            sized(summaryHeight, const RepaintBoundary(child: HotspotCard())),
+            const RepaintBoundary(child: HotspotCard()),
           sized(
             controlHeight,
             row([(2, const OutboundModeBar()), ...switches]),

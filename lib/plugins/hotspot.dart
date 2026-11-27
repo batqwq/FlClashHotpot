@@ -405,11 +405,15 @@ class AndroidHotspotHost implements HotspotHost {
     this._autoMatchEventChannel = const EventChannel(
       '$packageName/hotspot/auto_match_country_code',
     ),
+    this._quickStateEventChannel = const EventChannel(
+      '$packageName/hotspot/quick_state',
+    ),
   ]);
 
   final MethodChannel _methodChannel;
   final EventChannel _stateEventChannel;
   final EventChannel _autoMatchEventChannel;
+  final EventChannel _quickStateEventChannel;
 
   @override
   bool get isSupported => true;
@@ -425,8 +429,13 @@ class AndroidHotspotHost implements HotspotHost {
   }
 
   @override
-  Stream<HotspotSnapshot> watchState() {
-    return _stateEventChannel
+  Stream<HotspotSnapshot> watchState() => _watchSnapshots(_stateEventChannel);
+
+  Stream<HotspotSnapshot> watchQuickState() =>
+      _watchSnapshots(_quickStateEventChannel);
+
+  Stream<HotspotSnapshot> _watchSnapshots(EventChannel channel) {
+    return channel
         .receiveBroadcastStream()
         .where((event) => event is Map<Object?, Object?>)
         .map(
@@ -630,6 +639,11 @@ class HotspotManager {
   Future<HotspotSnapshot> getState() => _host.getState();
 
   Stream<HotspotSnapshot> watchState() => _host.watchState();
+
+  Stream<HotspotSnapshot> watchQuickState() => switch (_host) {
+    final AndroidHotspotHost host => host.watchQuickState(),
+    final host => host.watchState(),
+  };
 
   Stream<bool> watchAutoMatchCountryCode() => _host.watchAutoMatchCountryCode();
 

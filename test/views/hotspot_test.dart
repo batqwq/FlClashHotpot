@@ -6,6 +6,8 @@ import 'package:fl_clash/plugins/hotspot.dart';
 import 'package:fl_clash/providers/outbound_ip.dart';
 import 'package:fl_clash/providers/routed_probe.dart';
 import 'package:fl_clash/state.dart';
+import 'package:fl_clash/views/dashboard/widgets/card.dart';
+import 'package:fl_clash/views/dashboard/widgets/hotspot.dart';
 import 'package:fl_clash/views/hotspot.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -190,6 +192,7 @@ void main() {
     WidgetTester tester,
     _FakeHotspotHost host, {
     String? exitCountryCode = 'JP',
+    Widget child = const HotspotView(),
   }) async {
     tester.view.physicalSize = const Size(480, 1400);
     tester.view.devicePixelRatio = 1;
@@ -214,11 +217,46 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const TestApp(locale: Locale('en'), child: HotspotView()),
+        child: TestApp(locale: const Locale('en'), child: child),
       ),
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets('dashboard offers live Wi-Fi and USB hotspot shortcuts', (
+    tester,
+  ) async {
+    final host = _FakeHotspotHost(supported: true);
+    await pumpHotspot(tester, host, child: const HotspotCard());
+
+    final wifi = find.widgetWithText(DashboardSwitchRow, 'Wi-Fi hotspot');
+    final usb = find.widgetWithText(DashboardSwitchRow, 'USB tethering');
+    final mac = find.widgetWithText(DashboardSwitchRow, 'Mac USB sharing');
+    expect(find.text('Quick actions'), findsOneWidget);
+    expect(tester.widget<DashboardSwitchRow>(wifi).onChanged, isNull);
+    expect(host.calls, isEmpty);
+
+    host.emit(const HotspotSnapshot(supported: true, ncmSupported: true));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Wi-Fi hotspot'));
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('system:wifi:true'));
+
+    await tester.tap(find.text('Mac USB sharing'));
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('macWiredMode:true'));
+
+    host.emit(
+      const HotspotSnapshot(
+        supported: true,
+        ncmSupported: true,
+        ncmTetheringActive: true,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.widget<DashboardSwitchRow>(mac).value, isTrue);
+    expect(tester.widget<DashboardSwitchRow>(usb).onChanged, isNull);
+  });
 
   testWidgets('shows unsupported status when platform is not Android', (
     tester,
