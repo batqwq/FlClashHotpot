@@ -1163,6 +1163,7 @@
   "hotspotTempHotspot": "임시 핫스팟",
   "hotspotInterfaces": "활성 인터페이스",
   "hotspotWatchReconnect": "재연결 시 자동 활성화",
+  "hotspotAlwaysShareInterface": "항상 공유({iface})",
   "hotspotClients": "연결된 클라이언트",
   "hotspotNoClients": "연결된 클라이언트가 없습니다",
   "hotspotBlocked": "차단됨",

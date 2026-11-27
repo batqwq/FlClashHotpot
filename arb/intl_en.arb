@@ -1278,6 +1278,12 @@
   "hotspotTempHotspot": "Temporary hotspot",
   "hotspotInterfaces": "Active interfaces",
   "hotspotWatchReconnect": "Auto-enable on reconnect",
+  "hotspotAlwaysShareInterface": "Always share ({iface})",
+  "@hotspotAlwaysShareInterface": {
+    "placeholders": {
+      "iface": { "type": "String" }
+    }
+  },
   "hotspotClients": "Connected clients",
   "hotspotNoClients": "No connected clients",
   "hotspotBlocked": "Blocked",
