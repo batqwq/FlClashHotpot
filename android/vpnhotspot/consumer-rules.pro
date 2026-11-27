@@ -7,7 +7,7 @@
 -keep class be.mygod.vpnhotspot.net.wifi.WifiApManager$LocalOnlyHotspotEvent** { *; }
 -keep class be.mygod.vpnhotspot.net.wifi.WifiApManager$Event** { *; }
 -keep class be.mygod.vpnhotspot.net.TetheringManagerCompat$Event** { *; }
--keep class * extends android.net.IIntResultListener$Stub { *; }
+-keep class be.mygod.vpnhotspot.net.TetheringManagerCompat$IntResultListener { *; }
 -keep class be.mygod.librootkotlinx.** { *; }
 -keep class android.hardware.wifi.supplicant.** { *; }
 -keep class android.hardware.wifi.common.** { *; }

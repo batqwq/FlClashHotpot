@@ -53,11 +53,16 @@ void main() {
   testWidgets('the Android dashboard opens hotspot settings from its card', (
     tester,
   ) async {
-    await pumpDashboard(tester, const Size(412, 700), SupportPlatform.Android);
+    final position = await pumpDashboard(
+      tester,
+      const Size(412, 700),
+      SupportPlatform.Android,
+    );
     final card = find.byType(HotspotCard);
     expect(card, findsOneWidget);
 
     await tester.ensureVisible(card);
+    position.jumpTo(position.pixels - 80);
     await tester.pump();
     await tester.tap(find.text('VPN Hotspot'));
     await tester.pump();
