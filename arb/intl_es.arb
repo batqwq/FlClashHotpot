@@ -1163,6 +1163,7 @@
   "hotspotTempHotspot": "Punto de acceso temporal",
   "hotspotInterfaces": "Interfaces activas",
   "hotspotWatchReconnect": "Activar al reconectar",
+  "hotspotAlwaysShareInterface": "Compartir siempre ({iface})",
   "hotspotClients": "Clientes conectados",
   "hotspotNoClients": "No hay clientes conectados",
   "hotspotBlocked": "Bloqueado",

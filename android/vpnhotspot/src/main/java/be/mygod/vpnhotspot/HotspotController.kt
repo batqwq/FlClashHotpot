@@ -1,5 +1,6 @@
 package be.mygod.vpnhotspot
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -414,6 +415,18 @@ object HotspotController {
                 Intent(context, TetheringService::class.java)
                     .putExtra(TetheringService.EXTRA_REMOVE_INTERFACE, iface),
             )
+        }
+    }
+
+    fun restoreAlwaysSharedInterfaces(activity: Activity) {
+        scope.launch(Dispatchers.Main) {
+            val config = BootReceiver.tetheringConfig() ?: return@launch
+            if (config.monitored.isEmpty() || activity.isFinishing || activity.isDestroyed) return@launch
+            try {
+                config.start(activity)
+            } catch (e: IllegalStateException) {
+                Timber.w(e)
+            }
         }
     }
 

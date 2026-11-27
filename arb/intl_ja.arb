@@ -1163,6 +1163,7 @@
   "hotspotTempHotspot": "一時ホットスポット",
   "hotspotInterfaces": "アクティブなインターフェース",
   "hotspotWatchReconnect": "再接続時に自動有効化",
+  "hotspotAlwaysShareInterface": "常に共有（{iface}）",
   "hotspotClients": "接続中のクライアント",
   "hotspotNoClients": "接続中のクライアントはありません",
   "hotspotBlocked": "ブロック済み",

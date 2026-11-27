@@ -1163,6 +1163,7 @@
   "hotspotTempHotspot": "Временная точка доступа",
   "hotspotInterfaces": "Активные интерфейсы",
   "hotspotWatchReconnect": "Включать при переподключении",
+  "hotspotAlwaysShareInterface": "Всегда делиться ({iface})",
   "hotspotClients": "Подключённые клиенты",
   "hotspotNoClients": "Нет подключённых клиентов",
   "hotspotBlocked": "Заблокирован",

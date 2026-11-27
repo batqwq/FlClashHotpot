@@ -1,5 +1,6 @@
 package com.follow.clash
 
+import be.mygod.vpnhotspot.HotspotController
 import com.follow.clash.plugins.AppPlugin
 import com.follow.clash.plugins.BatteryPlugin
 import com.follow.clash.plugins.HotspotPlugin
@@ -21,6 +22,11 @@ class MainActivity : FlutterActivity() {
         flutterEngine.plugins.add(TilePlugin())
         flutterEngine.plugins.add(WifiSsidPlugin())
         ServiceState.attachFlutterEngine(flutterEngine)
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        HotspotController.restoreAlwaysSharedInterfaces(this)
     }
 
     override fun onDestroy() {

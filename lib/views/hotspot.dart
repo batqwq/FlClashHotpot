@@ -401,8 +401,7 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
                   : (value) => _toggleInterfaceManaged(iface.name, value),
             ),
             ListItem.toggle(
-              title: Text(l.hotspotWatchReconnect),
-              subtitle: Text(iface.name),
+              title: Text(l.hotspotAlwaysShareInterface(iface.name)),
               value: iface.monitored,
               onChanged: (value) =>
                   _toggleInterfaceMonitored(iface.name, value),

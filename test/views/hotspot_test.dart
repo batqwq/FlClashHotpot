@@ -364,7 +364,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(host.calls, contains('alwaysShareAll:true'));
 
-    final reconnect = find.text('Auto-enable on reconnect').last;
+    final reconnect = find.text('Always share (wlan2)');
     await tester.ensureVisible(reconnect);
     await tester.pumpAndSettle();
     await tester.tap(reconnect);

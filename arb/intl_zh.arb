@@ -1163,6 +1163,7 @@
   "hotspotTempHotspot": "临时热点",
   "hotspotInterfaces": "活跃共享接口",
   "hotspotWatchReconnect": "重连时自动开启",
+  "hotspotAlwaysShareInterface": "总是共享（{iface}）",
   "hotspotClients": "已连接设备",
   "hotspotNoClients": "暂无已连接设备",
   "hotspotBlocked": "已拦截",
