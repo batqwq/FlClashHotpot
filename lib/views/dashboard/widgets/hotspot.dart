@@ -40,7 +40,6 @@ class _HotspotCardState extends State<HotspotCard> {
   @override
   Widget build(BuildContext context) {
     final localizations = context.appLocalizations;
-    final color = context.colorScheme.onSurfaceVariant;
     void openSettings() {
       pushNestedPage<void>(context, const HotspotView());
     }
@@ -64,10 +63,6 @@ class _HotspotCardState extends State<HotspotCard> {
                 ),
               ),
             ),
-          ),
-          Text(
-            localizations.quickActions,
-            style: AppTextStyle.footnote.of(context).copyWith(color: color),
           ),
           StreamBuilder<HotspotSnapshot>(
             stream: _state,
@@ -96,7 +91,10 @@ class _HotspotCardState extends State<HotspotCard> {
                     : null,
                 onTap: enabled ? () => _runAction(() => action(!value)) : null,
                 iconSize: 32,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 radius: AppCorner.md,
               );
               return Column(
