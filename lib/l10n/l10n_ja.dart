@@ -3856,6 +3856,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hotspotWatchReconnect => '再接続時に自動有効化';
 
   @override
+  String hotspotAlwaysShareInterface(String iface) {
+    return '常に共有（$iface）';
+  }
+
+  @override
   String get hotspotClients => '接続中のクライアント';
 
   @override
