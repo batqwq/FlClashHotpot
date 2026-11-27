@@ -59,7 +59,7 @@ void main() {
 
     await tester.ensureVisible(card);
     await tester.pump();
-    await tester.tap(card);
+    await tester.tap(find.text('VPN Hotspot'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.byType(HotspotView), findsOneWidget);
