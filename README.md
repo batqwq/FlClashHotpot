@@ -74,9 +74,9 @@ FlClash starts the core only after the disclaimer is accepted. Where nobody can 
 **Share the VPN on Android.** On a rooted Android 10 or newer device, start FlClash's VPN and open **Tools > VPN Hotspot**.
 Under **Active interfaces**, enable **Select all** to share the VPN with all current and future Android tethering
 interfaces, or enable **Auto-enable on reconnect** for just the desired interfaces. These settings share existing
-connections; they do not turn on Android tethering. For sharing with macOS over USB or Ethernet, enable **Mac wired mode**
-to automatically share wired tethering interfaces (`USB NCM`, `Ethernet`, and `USB`), and on Android 11+ you can toggle
-**USB NCM tethering (Mac)** directly for driverless CDC NCM tethering on macOS. The foreground service keeps watching
+connections; they do not turn on Android tethering. **Mac USB sharing** starts USB NCM tethering and shares the VPN with
+macOS on Android devices that expose this mode. For Ethernet, enable Ethernet tethering and share its interface
+separately. The foreground service keeps watching
 when the UI closes. Enable **Start on boot** to restore monitoring after a reboot. Android's explicit Force stop still
 stops the service.
 

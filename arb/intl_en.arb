@@ -1300,8 +1300,8 @@
   "hotspotCountryCodeUpdated": "Wi-Fi country code set to {code}",
   "hotspotCountryCodeReset": "Wi-Fi country code reset to system default",
   "hotspotCleaned": "Routing rules cleaned",
-  "hotspotMacWiredMode": "Mac wired mode",
-  "hotspotMacWiredModeDesc": "Auto-share wired tethering (USB NCM & Ethernet) for macOS without driver",
-  "hotspotUsbNcmTethering": "USB NCM tethering (Mac)",
-  "hotspotUsbNcmTetheringDesc": "Driverless CDC NCM mode for macOS"
+  "hotspotMacWiredMode": "Mac USB sharing",
+  "hotspotMacWiredModeDesc": "Share the VPN with a Mac over USB NCM",
+  "hotspotMacWiredUnsupported": "This Android system does not offer a separate USB NCM sharing mode",
+  "hotspotMacWiredWaiting": "Waiting for Android to bring up the USB NCM link"
 }

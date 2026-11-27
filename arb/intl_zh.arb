@@ -1185,8 +1185,8 @@
   "hotspotCountryCodeUpdated": "Wi-Fi 国家代码已设为 {code}",
   "hotspotCountryCodeReset": "Wi-Fi 国家代码已恢复系统默认",
   "hotspotCleaned": "路由规则已清理",
-  "hotspotMacWiredMode": "Mac 专属有线模式",
-  "hotspotMacWiredModeDesc": "自动接管有线共享（USB NCM 与以太网），免驱直连 macOS",
-  "hotspotUsbNcmTethering": "USB NCM 共享（Mac 免驱）",
-  "hotspotUsbNcmTetheringDesc": "适用于 macOS 的免驱 CDC NCM 有线共享"
+  "hotspotMacWiredMode": "Mac USB 共享",
+  "hotspotMacWiredModeDesc": "通过 USB NCM 将 VPN 共享给 Mac",
+  "hotspotMacWiredUnsupported": "此 Android 系统未提供独立的 USB NCM 共享模式",
+  "hotspotMacWiredWaiting": "等待 Android 建立 USB NCM 链路"
 }

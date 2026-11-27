@@ -47,10 +47,7 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
         val alwaysShareAll get() = app.pref.getBoolean(KEY_ALWAYS_SHARE_ALL, false)
         val macWiredMode get() = app.pref.getBoolean(KEY_MAC_WIRED_MODE, false)
 
-        fun isWiredTetherInterface(iface: String): Boolean = when (TetherType.ofInterface(iface)) {
-            TetherType.NCM, TetherType.ETHERNET, TetherType.USB -> true
-            else -> false
-        }
+        private fun isMacTetherInterface(iface: String) = TetherType.ofInterface(iface) == TetherType.NCM
 
         var dismissHandle: TileServiceDismissHandle? = null
         private fun dismissIfApplicable() = dismissHandle?.run {
@@ -127,12 +124,12 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
         val all = alwaysShareAll
         val macWired = macWiredMode
         if (all || macWired) for (iface in tethered) {
-            if (all || isWiredTetherInterface(iface)) {
+            if (all || isMacTetherInterface(iface)) {
                 downstreams.compute(iface) { _, current -> current ?: Downstream(this, iface) }
             }
         }
         downstreams.toMutableScatterMap().forEach { iface, downstream ->
-            val autoManaged = all || (macWired && isWiredTetherInterface(iface))
+            val autoManaged = all || (macWired && isMacTetherInterface(iface))
             if (iface in tethered && (autoManaged || downstream.manual || downstream.monitor)) {
                 if (!downstream.started && !downstream.start()) dismissIfApplicable()
             } else {
@@ -229,7 +226,7 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
             intent.getStringExtra(EXTRA_REMOVE_INTERFACE_MONITOR)?.also { iface ->
                 downstreams[iface]?.let { downstream ->
                     downstream.monitor = false
-                    if (!downstream.manual && !alwaysShareAll && !(macWiredMode && isWiredTetherInterface(iface))) {
+                    if (!downstream.manual && !alwaysShareAll && !(macWiredMode && isMacTetherInterface(iface))) {
                         downstreams.remove(iface)?.stop()
                     }
                 }

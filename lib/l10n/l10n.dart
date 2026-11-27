@@ -7227,26 +7227,26 @@ abstract class AppLocalizations {
   /// No description provided for @hotspotMacWiredMode.
   ///
   /// In en, this message translates to:
-  /// **'Mac wired mode'**
+  /// **'Mac USB sharing'**
   String get hotspotMacWiredMode;
 
   /// No description provided for @hotspotMacWiredModeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Auto-share wired tethering (USB NCM & Ethernet) for macOS without driver'**
+  /// **'Share the VPN with a Mac over USB NCM'**
   String get hotspotMacWiredModeDesc;
 
-  /// No description provided for @hotspotUsbNcmTethering.
+  /// No description provided for @hotspotMacWiredUnsupported.
   ///
   /// In en, this message translates to:
-  /// **'USB NCM tethering (Mac)'**
-  String get hotspotUsbNcmTethering;
+  /// **'This Android system does not offer a separate USB NCM sharing mode'**
+  String get hotspotMacWiredUnsupported;
 
-  /// No description provided for @hotspotUsbNcmTetheringDesc.
+  /// No description provided for @hotspotMacWiredWaiting.
   ///
   /// In en, this message translates to:
-  /// **'Driverless CDC NCM mode for macOS'**
-  String get hotspotUsbNcmTetheringDesc;
+  /// **'Waiting for Android to bring up the USB NCM link'**
+  String get hotspotMacWiredWaiting;
 }
 
 class _AppLocalizationsDelegate

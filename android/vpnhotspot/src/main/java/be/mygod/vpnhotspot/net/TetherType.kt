@@ -56,6 +56,16 @@ enum class TetherType(@get:DrawableRes val icon: Int, @get:StringRes val label: 
         @RequiresApi(30)    // unused on lower APIs
         lateinit var changes: SharedFlow<Unit> private set
 
+        val supportsNcmTethering: Boolean get() = Build.VERSION.SDK_INT >= 30 && try {
+            synchronized(this) {
+                if (requiresUpdate) updateRegexs()
+                ncmRegexs.isNotEmpty()
+            }
+        } catch (e: RuntimeException) {
+            Timber.w(e)
+            false
+        }
+
         private fun Pair<String, Resources>.getRegexs(name: String, alternativePackage: String? = null): List<Pattern> {
             val id = second.findIdentifier(name, "array", first, alternativePackage)
             return if (id == 0) {

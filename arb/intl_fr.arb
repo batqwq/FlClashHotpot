@@ -1185,8 +1185,8 @@
   "hotspotCountryCodeUpdated": "Code pays Wi-Fi défini sur {code}",
   "hotspotCountryCodeReset": "Code pays Wi-Fi réinitialisé par défaut",
   "hotspotCleaned": "Règles de routage nettoyées",
-  "hotspotMacWiredMode": "Mode filaire Mac",
-  "hotspotMacWiredModeDesc": "Partager automatiquement le partage filaire (USB NCM et Ethernet) pour macOS sans pilote",
-  "hotspotUsbNcmTethering": "Partage USB NCM (Mac)",
-  "hotspotUsbNcmTetheringDesc": "Mode CDC NCM sans pilote pour macOS"
+  "hotspotMacWiredMode": "Partage USB avec un Mac",
+  "hotspotMacWiredModeDesc": "Partager le VPN avec un Mac via USB NCM",
+  "hotspotMacWiredUnsupported": "Ce système Android ne propose pas de mode de partage USB NCM distinct",
+  "hotspotMacWiredWaiting": "En attente de la connexion USB NCM par Android"
 }

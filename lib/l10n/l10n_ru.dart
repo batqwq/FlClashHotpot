@@ -4102,16 +4102,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hotspotCleaned => 'Правила маршрутизации очищены';
 
   @override
-  String get hotspotMacWiredMode => 'Проводной режим для Mac';
+  String get hotspotMacWiredMode => 'Общий доступ по USB для Mac';
 
   @override
-  String get hotspotMacWiredModeDesc =>
-      'Автоматически раздавать проводной модем (USB NCM и Ethernet) для macOS без драйверов';
+  String get hotspotMacWiredModeDesc => 'Раздавать VPN на Mac через USB NCM';
 
   @override
-  String get hotspotUsbNcmTethering => 'USB NCM-модем (Mac)';
+  String get hotspotMacWiredUnsupported =>
+      'Эта система Android не поддерживает отдельный режим модема USB NCM';
 
   @override
-  String get hotspotUsbNcmTetheringDesc =>
-      'Режим CDC NCM без драйверов для macOS';
+  String get hotspotMacWiredWaiting =>
+      'Ожидание подключения USB NCM на Android';
 }

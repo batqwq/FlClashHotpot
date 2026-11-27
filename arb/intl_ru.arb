@@ -1185,8 +1185,8 @@
   "hotspotCountryCodeUpdated": "Код страны Wi-Fi установлен: {code}",
   "hotspotCountryCodeReset": "Код страны Wi-Fi сброшен на системный",
   "hotspotCleaned": "Правила маршрутизации очищены",
-  "hotspotMacWiredMode": "Проводной режим для Mac",
-  "hotspotMacWiredModeDesc": "Автоматически раздавать проводной модем (USB NCM и Ethernet) для macOS без драйверов",
-  "hotspotUsbNcmTethering": "USB NCM-модем (Mac)",
-  "hotspotUsbNcmTetheringDesc": "Режим CDC NCM без драйверов для macOS"
+  "hotspotMacWiredMode": "Общий доступ по USB для Mac",
+  "hotspotMacWiredModeDesc": "Раздавать VPN на Mac через USB NCM",
+  "hotspotMacWiredUnsupported": "Эта система Android не поддерживает отдельный режим модема USB NCM",
+  "hotspotMacWiredWaiting": "Ожидание подключения USB NCM на Android"
 }

@@ -3999,15 +3999,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hotspotCleaned => '라우팅 규칙을 정리했습니다';
 
   @override
-  String get hotspotMacWiredMode => 'Mac 유선 전용 모드';
+  String get hotspotMacWiredMode => 'Mac USB 공유';
 
   @override
-  String get hotspotMacWiredModeDesc =>
-      'macOS용 유선 테더링(USB NCM 및 이더넷)을 드라이버 없이 자동 공유';
+  String get hotspotMacWiredModeDesc => 'USB NCM으로 Mac에 VPN 공유';
 
   @override
-  String get hotspotUsbNcmTethering => 'USB NCM 테더링 (Mac)';
+  String get hotspotMacWiredUnsupported =>
+      '이 Android 시스템은 별도의 USB NCM 테더링 모드를 제공하지 않습니다';
 
   @override
-  String get hotspotUsbNcmTetheringDesc => 'macOS용 드라이버 불필요 CDC NCM 모드';
+  String get hotspotMacWiredWaiting => 'Android에서 USB NCM 연결을 설정하는 중';
 }

@@ -232,6 +232,56 @@ void main() {
     );
   });
 
+  testWidgets('disables Mac USB sharing when Android has no NCM mode', (
+    tester,
+  ) async {
+    final host = _FakeHotspotHost(supported: true);
+    await pumpHotspot(tester, host);
+
+    final macSharing = find.text('Mac USB sharing');
+    await tester.ensureVisible(macSharing);
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'This Android system does not offer a separate USB NCM sharing mode',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(macSharing);
+    await tester.pumpAndSettle();
+    expect(host.calls, isNot(contains('macWiredMode:true')));
+  });
+
+  testWidgets('one Mac USB sharing switch starts and stops NCM', (
+    tester,
+  ) async {
+    final host = _FakeHotspotHost(
+      supported: true,
+      snapshot: const HotspotSnapshot(supported: true, ncmSupported: true),
+    );
+    await pumpHotspot(tester, host);
+
+    final macSharing = find.text('Mac USB sharing');
+    await tester.ensureVisible(macSharing);
+    await tester.pumpAndSettle();
+    await tester.tap(macSharing);
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('macWiredMode:true'));
+    expect(find.text('USB NCM tethering (Mac)'), findsNothing);
+
+    host.emit(
+      const HotspotSnapshot(
+        supported: true,
+        ncmSupported: true,
+        ncmTetheringActive: true,
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(macSharing);
+    await tester.pumpAndSettle();
+    expect(host.calls, contains('macWiredMode:false'));
+  });
+
   testWidgets('renders live hotspot state, interfaces, clients, and actions', (
     tester,
   ) async {
@@ -299,20 +349,6 @@ void main() {
     await tester.tap(find.text('Reset to system default'));
     await tester.pumpAndSettle();
     expect(host.calls, contains('countryCode:null'));
-
-    final macWired = find.text('Mac wired mode');
-    await tester.ensureVisible(macWired);
-    await tester.pumpAndSettle();
-    await tester.tap(macWired);
-    await tester.pumpAndSettle();
-    expect(host.calls, contains('macWiredMode:true'));
-
-    final usbNcm = find.text('USB NCM tethering (Mac)');
-    await tester.ensureVisible(usbNcm);
-    await tester.pumpAndSettle();
-    await tester.tap(usbNcm);
-    await tester.pumpAndSettle();
-    expect(host.calls, contains('system:ncm:true'));
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -600));
     await tester.pumpAndSettle();

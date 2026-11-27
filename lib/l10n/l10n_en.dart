@@ -4109,15 +4109,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hotspotCleaned => 'Routing rules cleaned';
 
   @override
-  String get hotspotMacWiredMode => 'Mac wired mode';
+  String get hotspotMacWiredMode => 'Mac USB sharing';
 
   @override
-  String get hotspotMacWiredModeDesc =>
-      'Auto-share wired tethering (USB NCM & Ethernet) for macOS without driver';
+  String get hotspotMacWiredModeDesc => 'Share the VPN with a Mac over USB NCM';
 
   @override
-  String get hotspotUsbNcmTethering => 'USB NCM tethering (Mac)';
+  String get hotspotMacWiredUnsupported =>
+      'This Android system does not offer a separate USB NCM sharing mode';
 
   @override
-  String get hotspotUsbNcmTetheringDesc => 'Driverless CDC NCM mode for macOS';
+  String get hotspotMacWiredWaiting =>
+      'Waiting for Android to bring up the USB NCM link';
 }

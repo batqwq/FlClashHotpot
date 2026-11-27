@@ -3874,14 +3874,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hotspotCleaned => '路由规则已清理';
 
   @override
-  String get hotspotMacWiredMode => 'Mac 专属有线模式';
+  String get hotspotMacWiredMode => 'Mac USB 共享';
 
   @override
-  String get hotspotMacWiredModeDesc => '自动接管有线共享（USB NCM 与以太网），免驱直连 macOS';
+  String get hotspotMacWiredModeDesc => '通过 USB NCM 将 VPN 共享给 Mac';
 
   @override
-  String get hotspotUsbNcmTethering => 'USB NCM 共享（Mac 免驱）';
+  String get hotspotMacWiredUnsupported => '此 Android 系统未提供独立的 USB NCM 共享模式';
 
   @override
-  String get hotspotUsbNcmTetheringDesc => '适用于 macOS 的免驱 CDC NCM 有线共享';
+  String get hotspotMacWiredWaiting => '等待 Android 建立 USB NCM 链路';
 }

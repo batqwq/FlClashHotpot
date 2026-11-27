@@ -3924,15 +3924,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hotspotCleaned => 'ルーティングルールをクリアしました';
 
   @override
-  String get hotspotMacWiredMode => 'Mac 専用有線モード';
+  String get hotspotMacWiredMode => 'Mac への USB 共有';
 
   @override
-  String get hotspotMacWiredModeDesc =>
-      'macOS 向けに有線テザリング（USB NCM・イーサネット）をドライバ不要で自動共有';
+  String get hotspotMacWiredModeDesc => 'USB NCM で Mac に VPN を共有';
 
   @override
-  String get hotspotUsbNcmTethering => 'USB NCM テザリング（Mac）';
+  String get hotspotMacWiredUnsupported =>
+      'この Android システムには独立した USB NCM テザリングモードがありません';
 
   @override
-  String get hotspotUsbNcmTetheringDesc => 'macOS 向けのドライバ不要 CDC NCM モード';
+  String get hotspotMacWiredWaiting => 'Android が USB NCM 接続を確立するまで待機中';
 }

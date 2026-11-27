@@ -118,7 +118,7 @@ object HotspotController {
         val systemHotspotActive: Boolean = false,
         val usbTetheringActive: Boolean = false,
         val ncmTetheringActive: Boolean = false,
-        val ncmSupported: Boolean = Build.VERSION.SDK_INT >= 30,
+        val ncmSupported: Boolean = false,
         val ethernetTetheringActive: Boolean = false,
         val ethernetSupported: Boolean = Build.VERSION.SDK_INT >= 30,
         val interfaces: List<InterfaceSnapshot> = emptyList(),
@@ -441,24 +441,22 @@ object HotspotController {
     }
 
     suspend fun setSystemTetheringEnabled(context: Context, type: String, enabled: Boolean): Boolean {
+        val tetherType = when (type) {
+            "wifi" -> TetheringManager.TETHERING_WIFI
+            "usb" -> TetheringManagerCompat.TETHERING_USB
+            "ethernet" -> TetheringManagerCompat.TETHERING_ETHERNET
+            else -> throw IllegalArgumentException("Unsupported tethering type: $type")
+        }
+        return requestSystemTethering(context, tetherType, enabled)
+    }
+
+    private suspend fun requestSystemTethering(context: Context, tetherType: Int, enabled: Boolean): Boolean {
         if (!Settings.System.canWrite(context)) {
             val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, "package:${context.packageName}".toUri()).apply {
                 if (context !is android.app.Activity) addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(intent)
             return false
-        }
-        val tetherType = when (type) {
-            "wifi" -> TetheringManager.TETHERING_WIFI
-            "usb" -> TetheringManagerCompat.TETHERING_USB
-            "ncm" -> {
-                if (Build.VERSION.SDK_INT < 30) {
-                    throw UnsupportedOperationException("USB NCM tethering requires Android 11+")
-                }
-                TetheringManagerCompat.TETHERING_NCM
-            }
-            "ethernet" -> TetheringManagerCompat.TETHERING_ETHERNET
-            else -> throw IllegalArgumentException("Unsupported tethering type: $type")
         }
         if (enabled) {
             TetheringManagerCompat.startTethering(tetherType, true)
@@ -549,23 +547,18 @@ object HotspotController {
     }
 
     suspend fun setMacWiredMode(context: Context, enabled: Boolean) {
+        val ncmActive = _snapshot.value.ncmTetheringActive
+        if (Build.VERSION.SDK_INT >= 30 && (ncmActive || TetherType.supportsNcmTethering)) {
+            if (!(enabled && ncmActive) &&
+                !requestSystemTethering(context, TetheringManagerCompat.TETHERING_NCM, enabled)
+            ) return
+        } else if (enabled) {
+            throw UnsupportedOperationException("USB NCM tethering is unavailable")
+        }
         context.startForegroundService(
             Intent(context, TetheringService::class.java)
                 .putExtra(TetheringService.EXTRA_MAC_WIRED_MODE, enabled),
         )
-        if (enabled && Build.VERSION.SDK_INT >= 30 && Settings.System.canWrite(context)) {
-            val tetheredTypes = tetherStates.tethered.mapTo(HashSet()) { TetherType.ofInterface(it) }
-            if (TetherType.NCM !in tetheredTypes && TetherType.ETHERNET !in tetheredTypes) {
-                try {
-                    TetheringManagerCompat.startTethering(TetheringManagerCompat.TETHERING_NCM, true)
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    Timber.d(e, "Best-effort USB NCM start skipped")
-                }
-            }
-        }
-        withContext(scope.coroutineContext) { rebuildSnapshot() }
     }
 
     fun openSystemTetheringSettings(context: Context) {
@@ -586,6 +579,7 @@ object HotspotController {
         currentCountryCode = cachedCountryCode,
         appliedCountryCode = WifiCountryCodeCommands.appliedCountryCode,
         repeaterSupported = Services.p2p != null,
+        ncmSupported = TetherType.supportsNcmTethering,
     )
 
     private suspend fun rebuildSnapshot() {
@@ -638,9 +632,9 @@ object HotspotController {
             localOnlyInterface = localOnlyIface?.takeIf { it.isNotEmpty() },
             localOnlySsid = localOnlyConfig?.ssid?.decode() ?: localOnlyConfig?.ssid?.toString(),
             systemHotspotActive = TetherType.WIFI in tetheredTypes,
-            usbTetheringActive = TetherType.USB in tetheredTypes || TetherType.NCM in tetheredTypes,
+            usbTetheringActive = TetherType.USB in tetheredTypes,
             ncmTetheringActive = TetherType.NCM in tetheredTypes,
-            ncmSupported = Build.VERSION.SDK_INT >= 30,
+            ncmSupported = TetherType.NCM in tetheredTypes || TetherType.supportsNcmTethering,
             ethernetTetheringActive = TetherType.ETHERNET in tetheredTypes,
             ethernetSupported = Build.VERSION.SDK_INT >= 30,
             interfaces = interfaceList,
@@ -697,7 +691,8 @@ object HotspotController {
     private fun tetherTypeName(type: TetherType) = when (type) {
         TetherType.WIFI -> "wifi"
         TetherType.WIFI_P2P -> "wifi_p2p"
-        TetherType.USB, TetherType.NCM -> "usb"
+        TetherType.USB -> "usb"
+        TetherType.NCM -> "ncm"
         TetherType.BLUETOOTH -> "bluetooth"
         TetherType.ETHERNET -> "ethernet"
         TetherType.WIGIG -> "wifi"

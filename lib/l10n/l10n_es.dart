@@ -4152,16 +4152,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hotspotCleaned => 'Reglas de enrutamiento limpiadas';
 
   @override
-  String get hotspotMacWiredMode => 'Modo cableado para Mac';
+  String get hotspotMacWiredMode => 'Compartir por USB con Mac';
 
   @override
   String get hotspotMacWiredModeDesc =>
-      'Compartir automáticamente conexiones por cable (USB NCM y Ethernet) para macOS sin controladores';
+      'Comparte la VPN con un Mac mediante USB NCM';
 
   @override
-  String get hotspotUsbNcmTethering => 'Anclaje USB NCM (Mac)';
+  String get hotspotMacWiredUnsupported =>
+      'Este sistema Android no ofrece un modo de anclaje USB NCM independiente';
 
   @override
-  String get hotspotUsbNcmTetheringDesc =>
-      'Modo CDC NCM sin controladores para macOS';
+  String get hotspotMacWiredWaiting =>
+      'Esperando a que Android establezca la conexión USB NCM';
 }

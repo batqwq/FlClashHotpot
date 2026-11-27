@@ -310,10 +310,18 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
           ListItem.toggle(
             leading: const GlyphIcon(AppGlyphs.connections),
             title: Text(l.hotspotMacWiredMode),
-            subtitle: Text(l.hotspotMacWiredModeDesc),
-            value: snapshot.macWiredMode,
-            onChanged: (value) =>
-                _runAction(() => hotspotManager.setMacWiredMode(value)),
+            subtitle: Text(
+              !snapshot.ncmSupported
+                  ? l.hotspotMacWiredUnsupported
+                  : snapshot.macWiredMode && !snapshot.ncmTetheringActive
+                  ? l.hotspotMacWiredWaiting
+                  : l.hotspotMacWiredModeDesc,
+            ),
+            value: snapshot.macWiredMode || snapshot.ncmTetheringActive,
+            onChanged: snapshot.ncmSupported || snapshot.macWiredMode
+                ? (value) =>
+                      _runAction(() => hotspotManager.setMacWiredMode(value))
+                : null,
           ),
           ListItem.toggle(
             leading: const GlyphIcon(AppGlyphs.wifi),
@@ -331,16 +339,6 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
               () => hotspotManager.setSystemTetheringEnabled('usb', value),
             ),
           ),
-          if (snapshot.ncmSupported)
-            ListItem.toggle(
-              leading: const GlyphIcon(AppGlyphs.link),
-              title: Text(l.hotspotUsbNcmTethering),
-              subtitle: Text(l.hotspotUsbNcmTetheringDesc),
-              value: snapshot.ncmTetheringActive,
-              onChanged: (value) => _runAction(
-                () => hotspotManager.setSystemTetheringEnabled('ncm', value),
-              ),
-            ),
           if (snapshot.ethernetSupported)
             ListItem.toggle(
               leading: const GlyphIcon(AppGlyphs.connections),
@@ -398,8 +396,7 @@ class _HotspotViewState extends ConsumerState<HotspotView> {
                   iface.inactive ||
                       iface.monitored ||
                       snapshot.alwaysShareAll ||
-                      (snapshot.macWiredMode &&
-                          (iface.type == 'usb' || iface.type == 'ethernet'))
+                      (snapshot.macWiredMode && iface.type == 'ncm')
                   ? null
                   : (value) => _toggleInterfaceManaged(iface.name, value),
             ),
