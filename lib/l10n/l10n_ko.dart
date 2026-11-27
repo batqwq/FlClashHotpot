@@ -3931,6 +3931,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hotspotWatchReconnect => '재연결 시 자동 활성화';
 
   @override
+  String hotspotAlwaysShareInterface(String iface) {
+    return '항상 공유($iface)';
+  }
+
+  @override
   String get hotspotClients => '연결된 클라이언트';
 
   @override

@@ -4031,6 +4031,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hotspotWatchReconnect => 'Включать при переподключении';
 
   @override
+  String hotspotAlwaysShareInterface(String iface) {
+    return 'Всегда делиться ($iface)';
+  }
+
+  @override
   String get hotspotClients => 'Подключённые клиенты';
 
   @override

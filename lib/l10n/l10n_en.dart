@@ -4037,6 +4037,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hotspotWatchReconnect => 'Auto-enable on reconnect';
 
   @override
+  String hotspotAlwaysShareInterface(String iface) {
+    return 'Always share ($iface)';
+  }
+
+  @override
   String get hotspotClients => 'Connected clients';
 
   @override

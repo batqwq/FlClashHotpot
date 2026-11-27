@@ -32,6 +32,7 @@ class HotspotPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAw
     private lateinit var context: Context
     private lateinit var methodChannel: MethodChannel
     private lateinit var stateEventChannel: EventChannel
+    private lateinit var quickStateEventChannel: EventChannel
     private lateinit var autoMatchEventChannel: EventChannel
 
     private var activityBinding: ActivityPluginBinding? = null
@@ -41,6 +42,7 @@ class HotspotPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAw
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private var stateCollectJob: Job? = null
+    private var quickStateCollectJob: Job? = null
     private var autoMatchCollectJob: Job? = null
     private var pendingPermissionAction: Pair<Int, (Boolean) -> Unit>? = null
 
@@ -79,6 +81,27 @@ class HotspotPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAw
             }
         })
 
+        quickStateEventChannel = EventChannel(binding.binaryMessenger, "${Components.PACKAGE_NAME}/hotspot/quick_state")
+        quickStateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
+                quickStateCollectJob?.cancel()
+                quickStateCollectJob = scope.launch {
+                    try {
+                        HotspotController.observeQuickState().collect { events.success(it.toMap()) }
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        events.error("hotspot_quick_state", e.readableMessage, null)
+                    }
+                }
+            }
+
+            override fun onCancel(arguments: Any?) {
+                quickStateCollectJob?.cancel()
+                quickStateCollectJob = null
+            }
+        })
+
         autoMatchEventChannel = EventChannel(
             binding.binaryMessenger,
             "${Components.PACKAGE_NAME}/hotspot/auto_match_country_code",
@@ -103,6 +126,7 @@ class HotspotPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAw
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel.setMethodCallHandler(null)
         stateEventChannel.setStreamHandler(null)
+        quickStateEventChannel.setStreamHandler(null)
         autoMatchEventChannel.setStreamHandler(null)
         if (stateCollectJob != null) {
             stateCollectJob?.cancel()
@@ -111,6 +135,8 @@ class HotspotPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAw
         }
         autoMatchCollectJob?.cancel()
         autoMatchCollectJob = null
+        quickStateCollectJob?.cancel()
+        quickStateCollectJob = null
         detachFromActivity()
         scope.cancel()
     }

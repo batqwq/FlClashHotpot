@@ -3806,6 +3806,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hotspotWatchReconnect => '重连时自动开启';
 
   @override
+  String hotspotAlwaysShareInterface(String iface) {
+    return '总是共享（$iface）';
+  }
+
+  @override
   String get hotspotClients => '已连接设备';
 
   @override

@@ -7092,6 +7092,12 @@ abstract class AppLocalizations {
   /// **'Auto-enable on reconnect'**
   String get hotspotWatchReconnect;
 
+  /// No description provided for @hotspotAlwaysShareInterface.
+  ///
+  /// In en, this message translates to:
+  /// **'Always share ({iface})'**
+  String hotspotAlwaysShareInterface(String iface);
+
   /// No description provided for @hotspotClients.
   ///
   /// In en, this message translates to:
