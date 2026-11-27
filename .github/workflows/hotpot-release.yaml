@@ -1,13 +1,6 @@
 name: Hotpot Release
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'README.md'
-      - 'README_zh_CN.md'
-      - '.github/workflows/sync-upstream.yaml'
   workflow_dispatch:
 
 concurrency:
@@ -15,7 +8,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FLUTTER_VERSION: '3.50.0'
@@ -24,7 +17,7 @@ env:
 
 jobs:
   release-android:
-    name: Build and Release Android APK
+    name: Build Signed Android APK
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -84,13 +77,16 @@ jobs:
           link-to-sdk: true
 
       - name: Setup Android Signing
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
-          {
-            echo "keyAlias=${{ secrets.KEY_ALIAS }}"
-            echo "storePassword=${{ secrets.STORE_PASSWORD }}"
-            echo "keyPassword=${{ secrets.KEY_PASSWORD }}"
-          } >> android/local.properties
+          test -n "$KEYSTORE" && test -n "$KEY_ALIAS" && test -n "$STORE_PASSWORD" && test -n "$KEY_PASSWORD" || exit 1
+          printf '%s' "$KEYSTORE" | base64 --decode > android/app/keystore.jks
+          printf 'keyAlias=%s\nstorePassword=%s\nkeyPassword=%s\n' \
+            "$KEY_ALIAS" "$STORE_PASSWORD" "$KEY_PASSWORD" >> android/local.properties
 
       - name: Install dependencies
         run: flutter pub get
@@ -102,23 +98,13 @@ jobs:
       - name: Build Android arm64 APK
         env:
           ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
-        run: flutter build apk --release --split-per-abi --target-platform android-arm64
-
-      - name: Prepare release metadata
-        id: meta
         run: |
-          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/+.*//' | tr -d '[:space:]')
-          TAG="v${VERSION}-hotpot.${GITHUB_RUN_NUMBER}"
-          APK_OUT="build/app/outputs/flutter-apk/FlClashHotpot-${VERSION}-hotpot.${GITHUB_RUN_NUMBER}-android-arm64.apk"
-          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "$APK_OUT"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "apk=$APK_OUT" >> "$GITHUB_OUTPUT"
+          flutter build apk --release --split-per-abi --target-platform android-arm64 \
+            --build-number "$(date -u +%Y%m%d%H)"
 
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload signed APK
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ steps.meta.outputs.tag }}
-          name: FlClashHotpot ${{ steps.meta.outputs.tag }}
-          make_latest: true
-          generate_release_notes: true
-          files: ${{ steps.meta.outputs.apk }}
+          name: signed-hotpot-android-arm64-apk
+          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+          if-no-files-found: error
