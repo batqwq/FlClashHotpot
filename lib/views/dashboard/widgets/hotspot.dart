@@ -5,7 +5,6 @@ import 'package:fl_clash/views/hotspot.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:prism_ui/shapes/shapes.dart';
 
 import 'card.dart';
 
