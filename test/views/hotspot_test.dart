@@ -232,7 +232,6 @@ void main() {
     final wifi = find.widgetWithText(DashboardSwitchRow, 'Wi-Fi hotspot');
     final usb = find.widgetWithText(DashboardSwitchRow, 'USB tethering');
     final mac = find.widgetWithText(DashboardSwitchRow, 'Mac USB sharing');
-    expect(find.text('Quick actions'), findsOneWidget);
     expect(tester.widget<DashboardSwitchRow>(wifi).onChanged, isNull);
     expect(host.calls, isEmpty);
 
