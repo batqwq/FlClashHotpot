@@ -91,6 +91,16 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Upload generated localizations
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-localizations
+          path: lib/l10n/*.dart
+          if-no-files-found: error
+
       - name: Pre-download Go modules
         working-directory: core
         run: go mod download
