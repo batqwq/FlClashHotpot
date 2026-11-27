@@ -94,7 +94,7 @@ data class Dump(val path: String) : RootCommandNoResult {
 }
 
 @Parcelize
-data class SettingsGlobalPut(val name: String, val value: String) : RootCommandNoResult {
+data class SettingsGlobalPut(val name: String, val value: String?) : RootCommandNoResult {
     companion object {
         suspend fun int(name: String, value: Int) {
             try {
@@ -111,7 +111,8 @@ data class SettingsGlobalPut(val name: String, val value: String) : RootCommandN
     }
 
     override suspend fun execute() = null.also {
-        val (exit, output) = ProcessBuilder("/system/bin/settings", "put", "global", name, value).apply {
+        val command = if (value == null) listOf("delete", "global", name) else listOf("put", "global", name, value)
+        val (exit, output) = ProcessBuilder(listOf("/system/bin/settings") + command).apply {
             redirectInput(ProcessBuilder.Redirect.from(File("/dev/null")))
         }.startPipes(stdin = false).use { pipes ->
             var stdout: ByteReadChannel? = null
@@ -129,6 +130,8 @@ data class SettingsGlobalPut(val name: String, val value: String) : RootCommandN
                 stderr?.cancel(null)
             }
         }
-        if (exit != 0 || output.isNotEmpty()) throw RemoteException("Process exited with $exit: $output")
+        if (exit != 0 || (value != null && output.isNotEmpty())) {
+            throw RemoteException("Process exited with $exit: $output")
+        }
     }
 }

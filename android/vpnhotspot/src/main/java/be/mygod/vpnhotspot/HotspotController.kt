@@ -14,6 +14,7 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import be.mygod.vpnhotspot.App.Companion.app
 import be.mygod.vpnhotspot.manage.ManageBar
+import be.mygod.vpnhotspot.net.MacUsbMode
 import be.mygod.vpnhotspot.net.NetlinkNeighbour
 import be.mygod.vpnhotspot.net.Routing
 import be.mygod.vpnhotspot.net.TetherOffloadManager
@@ -47,7 +48,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
@@ -55,6 +59,8 @@ import java.net.NetworkInterface
 import java.net.SocketException
 
 object HotspotController {
+    private val macUsbMutex = Mutex()
+
     data class InterfaceSnapshot(
         val name: String,
         val type: String,
@@ -203,6 +209,7 @@ object HotspotController {
         }
         app.pref.registerOnSharedPreferenceChangeListener(prefListener)
         observerJob = scope.launch {
+            launch { recoverMacUsbOverride() }
             launch {
                 TetherStates.flow.collect {
                     tetherStates = it
@@ -447,7 +454,10 @@ object HotspotController {
             "ethernet" -> TetheringManagerCompat.TETHERING_ETHERNET
             else -> throw IllegalArgumentException("Unsupported tethering type: $type")
         }
-        return requestSystemTethering(context, tetherType, enabled)
+        return if (type == "usb") macUsbMutex.withLock {
+            check(!MacUsbMode.hasOverride) { "Turn off Mac USB sharing before changing regular USB tethering" }
+            requestSystemTethering(context, tetherType, enabled)
+        } else requestSystemTethering(context, tetherType, enabled)
     }
 
     private suspend fun requestSystemTethering(context: Context, tetherType: Int, enabled: Boolean): Boolean {
@@ -546,19 +556,59 @@ object HotspotController {
         )
     }
 
-    suspend fun setMacWiredMode(context: Context, enabled: Boolean) {
+    suspend fun setMacWiredMode(context: Context, enabled: Boolean) = macUsbMutex.withLock {
         val ncmActive = _snapshot.value.ncmTetheringActive
-        if (Build.VERSION.SDK_INT >= 30 && (ncmActive || TetherType.supportsNcmTethering)) {
+        if (!enabled && MacUsbMode.hasOverride && Build.VERSION.SDK_INT >= 30) {
+            MacUsbMode.stop()
+        } else if (enabled && MacUsbMode.active) {
+            return@withLock
+        } else if (Build.VERSION.SDK_INT >= 30 && (ncmActive || TetherType.supportsNcmTethering)) {
             if (!(enabled && ncmActive) &&
                 !requestSystemTethering(context, TetheringManagerCompat.TETHERING_NCM, enabled)
-            ) return
+            ) return@withLock
+        } else if (enabled && Build.VERSION.SDK_INT >= 34) {
+            if (MacUsbMode.hasOverride) MacUsbMode.restore()
+            check(TetherStates.flow.first().tethered.none { TetherType.ofInterface(it) == TetherType.USB }) {
+                "Turn off regular USB tethering before enabling Mac USB sharing"
+            }
+            MacUsbMode.start()
         } else if (enabled) {
             throw UnsupportedOperationException("USB NCM tethering is unavailable")
         }
-        context.startForegroundService(
-            Intent(context, TetheringService::class.java)
-                .putExtra(TetheringService.EXTRA_MAC_WIRED_MODE, enabled),
-        )
+        try {
+            context.startForegroundService(
+                Intent(context, TetheringService::class.java)
+                    .putExtra(TetheringService.EXTRA_MAC_WIRED_MODE, enabled),
+            )
+        } catch (e: Exception) {
+            if (enabled && Build.VERSION.SDK_INT >= 30 && MacUsbMode.hasOverride) {
+                try {
+                    MacUsbMode.stop()
+                } catch (cleanup: Exception) {
+                    e.addSuppressed(cleanup)
+                }
+            }
+            throw e
+        }
+    }
+
+    private suspend fun recoverMacUsbOverride() = macUsbMutex.withLock {
+        if (!MacUsbMode.hasOverride || MacUsbMode.active) return@withLock
+        try {
+            MacUsbMode.restore()
+            TetheringService.clearMacWiredMode()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Timber.w(e)
+        }
+    }
+
+    internal suspend fun stopMacUsbOverride() = macUsbMutex.withLock {
+        if (Build.VERSION.SDK_INT >= 30 && MacUsbMode.hasOverride) {
+            MacUsbMode.stop()
+            TetheringService.clearMacWiredMode()
+        }
     }
 
     fun openSystemTetheringSettings(context: Context) {
@@ -579,7 +629,7 @@ object HotspotController {
         currentCountryCode = cachedCountryCode,
         appliedCountryCode = WifiCountryCodeCommands.appliedCountryCode,
         repeaterSupported = Services.p2p != null,
-        ncmSupported = TetherType.supportsNcmTethering,
+        ncmSupported = TetherType.supportsNcmTethering || MacUsbMode.supported,
     )
 
     private suspend fun rebuildSnapshot() {
@@ -599,14 +649,14 @@ object HotspotController {
             }.orEmpty()
             InterfaceSnapshot(
                 name = iface,
-                type = tetherTypeName(TetherType.ofInterface(iface)),
+                type = tetherTypeName(MacUsbMode.tetherType(iface)),
                 managed = iface in managed && iface !in inactive,
                 monitored = iface in monitored,
                 inactive = iface in inactive || iface !in tetherStates.tethered,
                 addresses = addresses,
             )
         }
-        val tetheredTypes = tetherStates.tethered.mapTo(HashSet()) { TetherType.ofInterface(it) }
+        val tetheredTypes = tetherStates.tethered.mapTo(HashSet(), MacUsbMode::tetherType)
         val clients = buildClientSnapshots(tetherStates.tethered)
         val activeClientCount = clients.count { it.active }
         _snapshot.value = Snapshot(
@@ -634,7 +684,7 @@ object HotspotController {
             systemHotspotActive = TetherType.WIFI in tetheredTypes,
             usbTetheringActive = TetherType.USB in tetheredTypes,
             ncmTetheringActive = TetherType.NCM in tetheredTypes,
-            ncmSupported = TetherType.NCM in tetheredTypes || TetherType.supportsNcmTethering,
+            ncmSupported = TetherType.NCM in tetheredTypes || TetherType.supportsNcmTethering || MacUsbMode.supported,
             ethernetTetheringActive = TetherType.ETHERNET in tetheredTypes,
             ethernetSupported = Build.VERSION.SDK_INT >= 30,
             interfaces = interfaceList,
@@ -666,7 +716,7 @@ object HotspotController {
             ClientSnapshot(
                 mac = mac.toString(),
                 iface = iface,
-                type = tetherTypeName(TetherType.ofInterface(iface)),
+                type = tetherTypeName(MacUsbMode.tetherType(iface)),
                 nickname = record?.nickname?.text.orEmpty(),
                 blocked = record?.blocked == true,
                 active = active,
