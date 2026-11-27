@@ -43,6 +43,7 @@ class _HotspotCardState extends State<HotspotCard> {
     void openSettings() {
       pushNestedPage<void>(context, const HotspotView());
     }
+
     return DashboardCard(
       child: Column(
         mainAxisSize: MainAxisSize.min,
