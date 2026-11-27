@@ -140,6 +140,10 @@ object TetheringManagerCompat {
     }
     private var stopTetheringHasAttributionTag = true
 
+    private class IntResultListener(private val callback: (Int) -> Unit) : IIntResultListener.Stub() {
+        override fun onResult(resultCode: Int) = callback(resultCode)
+    }
+
 //    @get:RequiresApi(30)
 //    private val setStaticIpv4Addresses by lazy {
 //        TetheringManager.TetheringRequest.Builder::class.java.getDeclaredMethod("setStaticIpv4Addresses",
@@ -252,11 +256,9 @@ object TetheringManagerCompat {
             override fun invoke(proxy: Any, method: Method, args: Array<out Any?>?) = when {
                 method.matches("onConnectorAvailable", ITetheringConnector::class.java) -> run {
                     val connector = args!![0] as ITetheringConnector
-                    val resultListener = object : IIntResultListener.Stub() {
-                        override fun onResult(resultCode: Int) {
-                            if (resultCode == TetheringManager.TETHER_ERROR_NO_ERROR) cont.resume(Unit)
-                            else cont.resumeWithException(Failure(resultCode))
-                        }
+                    val resultListener = IntResultListener { resultCode ->
+                        if (resultCode == TetheringManager.TETHER_ERROR_NO_ERROR) cont.resume(Unit)
+                        else cont.resumeWithException(Failure(resultCode))
                     }
                     if (stopTetheringHasAttributionTag) try {
                         connector.stopTethering(type, context.opPackageName, context.attributionTag, resultListener)
