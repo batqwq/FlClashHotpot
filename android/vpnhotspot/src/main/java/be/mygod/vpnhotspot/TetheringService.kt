@@ -10,6 +10,7 @@ import androidx.collection.emptyScatterSet
 import androidx.collection.toMutableScatterMap
 import androidx.core.content.edit
 import be.mygod.vpnhotspot.App.Companion.app
+import be.mygod.vpnhotspot.net.MacUsbMode
 import be.mygod.vpnhotspot.net.Routing
 import be.mygod.vpnhotspot.net.TetherStates
 import be.mygod.vpnhotspot.net.TetherType
@@ -47,7 +48,9 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
         val alwaysShareAll get() = app.pref.getBoolean(KEY_ALWAYS_SHARE_ALL, false)
         val macWiredMode get() = app.pref.getBoolean(KEY_MAC_WIRED_MODE, false)
 
-        private fun isMacTetherInterface(iface: String) = TetherType.ofInterface(iface) == TetherType.NCM
+        private fun isMacTetherInterface(iface: String) = MacUsbMode.tetherType(iface) == TetherType.NCM
+
+        internal fun clearMacWiredMode() = app.pref.edit { remove(KEY_MAC_WIRED_MODE) }
 
         var dismissHandle: TileServiceDismissHandle? = null
         private fun dismissIfApplicable() = dismissHandle?.run {
@@ -245,6 +248,11 @@ class TetheringService : NetlinkNeighbourMonitoringService() {
                 val oldDownstreams = downstreams
                 downstreams = MutableScatterMap()
                 oldDownstreams.forEachValue { it.stop() }    // force clean to prevent leakage
+                try {
+                    HotspotController.stopMacUsbOverride()
+                } catch (e: Exception) {
+                    Timber.w(e)
+                }
                 cancel()
             }
         }
